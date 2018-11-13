@@ -1,7 +1,7 @@
 # Личный проект «Пиксель хантер» [![Build status][travis-image]][travis-url]
 
 * Студент: [Rustam Arkharov](https://up.htmlacademy.ru/ecmascript/7/user/794021).
-* Наставник: `Неизвестно`.
+* Наставник: [Арсений Ильяшов](https://github.com/Sigiller).
 
 ---
 
