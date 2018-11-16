@@ -15,6 +15,12 @@ const KeyCodes = {
 
 const MAIN_NODE = document.querySelector(`#main`);
 const BODY_NODE = document.querySelector(`body`);
+const LAST_TEMPLATE_NODE = document.querySelector(`script:last-child`);
+
+const ArrowButtons = {
+  LEFT_SELECTOR: `.arrows__btn:first-of-type`,
+  RIGHT_SELECTOR: `.arrows__btn:last-of-type`
+};
 
 const ADDITIONAL_HTML = `
 <div class="arrows__wrap">
@@ -43,8 +49,9 @@ let currentGameWindow;
 const init = () => {
   readHtmlTemplates();
   showGameWindow(0);
+  // insertInnerHtmlBeforeEnd(BODY_NODE, ADDITIONAL_HTML);
+  insertInnerHtmlBeforeBegin(LAST_TEMPLATE_NODE, ADDITIONAL_HTML);
   setUserInteractionHandlers();
-  insertInnerHtmlBeforeEnd(BODY_NODE, ADDITIONAL_HTML);
 }
 
 const readHtmlTemplates = () => {
@@ -94,10 +101,19 @@ const moveGameWindowForward = () => {
 
 const setUserInteractionHandlers = () => {
   setKeyboardArrowHandlers();
+  setButtonsArrowHandlers();
 };
 
 const setKeyboardArrowHandlers = () => {
   window.addEventListener(`keydown`, onKeyDown);
+};
+
+const setButtonsArrowHandlers = () => {
+  const leftNode = document.querySelector(ArrowButtons.LEFT_SELECTOR);
+  leftNode.addEventListener(`click`, moveGameWindowBack);
+
+  const rightNode = document.querySelector(ArrowButtons.RIGHT_SELECTOR);
+  rightNode.addEventListener(`click`, moveGameWindowForward);
 };
 
 const onKeyDown = (evt) => {
@@ -109,8 +125,8 @@ const onKeyDown = (evt) => {
   }
 }
 
-const insertInnerHtmlBeforeEnd = (node, htmlText) => {
-  node.insertAdjacentHTML(`beforeend`, htmlText);
+const insertInnerHtmlBeforeBegin = (node, htmlText) => {
+  node.insertAdjacentHTML(`beforebegin`, htmlText);
 }
 
 const isInRange = (value, min, max) => {
