@@ -1,3 +1,5 @@
+'use strict';
+
 const TemplateGameWindowHtmlSelectors = [
   `#intro`,
   `#greeting`,
@@ -14,7 +16,6 @@ const KeyCodes = {
 };
 
 const MAIN_NODE = document.querySelector(`#main`);
-const BODY_NODE = document.querySelector(`body`);
 const LAST_TEMPLATE_NODE = document.querySelector(`script:last-child`);
 
 const ArrowButtons = {
@@ -52,19 +53,19 @@ const init = () => {
   // insertInnerHtmlBeforeEnd(BODY_NODE, ADDITIONAL_HTML);
   insertInnerHtmlBeforeBegin(LAST_TEMPLATE_NODE, ADDITIONAL_HTML);
   setUserInteractionHandlers();
-}
+};
 
 const readHtmlTemplates = () => {
   templateGameWindowNodes = TemplateGameWindowHtmlSelectors.map((selector) => {
     return document.querySelector(selector);
   });
-}
+};
 
 const makeGameWindowFragment = (index) => {
-    const fragment = document.createDocumentFragment();
-    const cloned = templateGameWindowNodes[index].content.cloneNode(true);
-    fragment.appendChild(cloned);
-    return fragment;
+  const fragment = document.createDocumentFragment();
+  const cloned = templateGameWindowNodes[index].content.cloneNode(true);
+  fragment.appendChild(cloned);
+  return fragment;
 };
 
 const showGameWindow = (index = 0) => {
@@ -72,13 +73,13 @@ const showGameWindow = (index = 0) => {
   deleteCurrentGameWindow();
   MAIN_NODE.appendChild(fragment);
   currentGameWindow = index;
-}
+};
 
 const deleteCurrentGameWindow = () => {
   for (let i = MAIN_NODE.children.length; i--;) {
     MAIN_NODE.children[i].remove();
-  };
-}
+  }
+};
 
 const moveGameWindow = (increment) => {
   if (!increment) {
@@ -89,15 +90,15 @@ const moveGameWindow = (increment) => {
     return;
   }
   showGameWindow(newPosition);
-}
+};
 
 const moveGameWindowBack = () => {
   moveGameWindow(-1);
-}
+};
 
 const moveGameWindowForward = () => {
   moveGameWindow(+1);
-}
+};
 
 const setUserInteractionHandlers = () => {
   setKeyboardArrowHandlers();
@@ -123,14 +124,14 @@ const onKeyDown = (evt) => {
   if (evt.keyCode === KeyCodes.RIGHT) {
     moveGameWindowForward();
   }
-}
+};
 
 const insertInnerHtmlBeforeBegin = (node, htmlText) => {
   node.insertAdjacentHTML(`beforebegin`, htmlText);
-}
+};
 
 const isInRange = (value, min, max) => {
   return value >= min && value < max;
-}
+};
 
 init();
