@@ -50,7 +50,6 @@ let currentGameWindow;
 const init = () => {
   readHtmlTemplates();
   showGameWindow(0);
-  // insertInnerHtmlBeforeEnd(BODY_NODE, ADDITIONAL_HTML);
   insertInnerHtmlBeforeBegin(LAST_TEMPLATE_NODE, ADDITIONAL_HTML);
   setUserInteractionHandlers();
 };
