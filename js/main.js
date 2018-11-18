@@ -1,3 +1,12 @@
+import {isInRange, makeDocumentFragmentFromText} from './utils.js';
+import introWindow from './intro-window.js';
+import rulesWindow from './rules-window.js';
+import greetingWindow from './greeting-window.js';
+import game1Window from './game-1-window.js';
+import game2Window from './game-2-window.js';
+import game3Window from './game-3-window.js';
+import statsWindow from './stats-window.js';
+
 const TemplateGameWindowHtmlSelectors = [
   `#intro`,
   `#greeting`,
@@ -7,6 +16,8 @@ const TemplateGameWindowHtmlSelectors = [
   `#game-3`,
   `#stats`
 ];
+
+let windowNodes = [];
 
 const KeyCodes = {
   LEFT: 37,
@@ -46,29 +57,25 @@ let templateGameWindowNodes;
 let currentGameWindow;
 
 const init = () => {
-  readHtmlTemplates();
+  makeWindowNodes();
   showGameWindow(0);
   insertInnerHtmlBeforeBegin(LAST_TEMPLATE_NODE, ADDITIONAL_HTML);
   setUserInteractionHandlers();
 };
 
-const readHtmlTemplates = () => {
-  templateGameWindowNodes = TemplateGameWindowHtmlSelectors.map((selector) => {
-    return document.querySelector(selector);
-  });
+const makeWindowNodes = () => {
+  windowNodes.push(introWindow);
+  windowNodes.push(greetingWindow);
+  windowNodes.push(rulesWindow);
+  windowNodes.push(game1Window);
+  windowNodes.push(game2Window);
+  windowNodes.push(game3Window);
+  windowNodes.push(statsWindow);
 };
 
-const makeGameWindowFragment = (index) => {
-  const fragment = document.createDocumentFragment();
-  const cloned = templateGameWindowNodes[index].content.cloneNode(true);
-  fragment.appendChild(cloned);
-  return fragment;
-};
-
-const showGameWindow = (index = 0) => {
-  const fragment = makeGameWindowFragment(index);
+const showGameWindow = (index) => {
   deleteCurrentGameWindow();
-  MAIN_NODE.appendChild(fragment);
+  MAIN_NODE.appendChild(windowNodes[index]);
   currentGameWindow = index;
 };
 
@@ -83,7 +90,7 @@ const moveGameWindow = (increment) => {
     return;
   }
   const newPosition = currentGameWindow + increment;
-  if (!isInRange(newPosition, 0, templateGameWindowNodes.length)) {
+  if (!isInRange(newPosition, 0, windowNodes.length)) {
     return;
   }
   showGameWindow(newPosition);
@@ -125,10 +132,6 @@ const onKeyDown = (evt) => {
 
 const insertInnerHtmlBeforeBegin = (node, htmlText) => {
   node.insertAdjacentHTML(`beforebegin`, htmlText);
-};
-
-const isInRange = (value, min, max) => {
-  return value >= min && value < max;
 };
 
 init();
