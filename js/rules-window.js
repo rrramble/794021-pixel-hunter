@@ -50,9 +50,7 @@ const addEventListeners = () => {
 
 const addPreviousWindowListener = () => {
   previousButtonNode = document.querySelector(PREVIOUS_BUTTON_SELECTOR);
-  previousButtonNode.addEventListener(`click`, () => {
-    greetingWindow();
-  });
+  previousButtonNode.addEventListener(`click`, greetingWindow);
 };
 
 const addNameInputListener = () => {

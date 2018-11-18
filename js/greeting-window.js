@@ -35,9 +35,7 @@ const addEventListeners = () => {
 
 const addNextWindowListener = () => {
   nextButtonNode = document.querySelector(NEXT_BUTTON_SELECTOR);
-  nextButtonNode.addEventListener(`click`, () => {
-    rulesWindow();
-  });
+  nextButtonNode.addEventListener(`click`, rulesWindow);
 };
 
 const run = () => {

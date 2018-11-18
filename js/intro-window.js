@@ -19,9 +19,7 @@ const addEventListeners = () => {
 
 const addNextWindowListener = () => {
   nextButtonNode = document.querySelector(NEXT_BUTTON_SELECTOR);
-  nextButtonNode.addEventListener(`click`, () => {
-    greetingWindow();
-  });
+  nextButtonNode.addEventListener(`click`, greetingWindow);
 };
 
 const run = () => {
