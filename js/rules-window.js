@@ -1,6 +1,6 @@
 // Экран 'Правила игры'
 
-import {changeWindow, enableInput} from './utils.js';
+import {changeWindow, enableFormInput} from './utils.js';
 import greetingWindow from './greeting-window.js';
 import nextWindow from './game-1-window.js';
 
@@ -58,7 +58,7 @@ const addNameInputListener = () => {
   sendButtonNode = document.querySelector(SEND_BUTTON_SELECTOR);
 
   nameInputNode.addEventListener(`keyup`, () => {
-    enableInput(sendButtonNode, isInputNameValid());
+    enableFormInput(sendButtonNode, isInputNameValid());
   });
 };
 

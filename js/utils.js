@@ -22,7 +22,7 @@ export const changeWindow = (innerHtml) => {
   showWindow(node);
 };
 
-export const enableInput = (domNode, shouldBeEnabled) => {
+export const enableFormInput = (domNode, shouldBeEnabled) => {
   domNode.disabled = !shouldBeEnabled;
 };
 
