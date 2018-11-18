@@ -1,6 +1,6 @@
 // Экран 'Приветствие'
 
-import {makeDomNodeFromText, deleteCurrentWindow, showWindow} from './utils.js';
+import {changeWindow} from './utils.js';
 import rulesWindow from './rules-window.js';
 
 const NEXT_BUTTON_SELECTOR = `.greeting__continue`;
@@ -41,9 +41,7 @@ const addNextWindowListener = () => {
 };
 
 const run = () => {
-  deleteCurrentWindow();
-  const node = makeDomNodeFromText(HTML_TEXT);
-  showWindow(node);
+  changeWindow(HTML_TEXT);
   addEventListeners();
 };
 

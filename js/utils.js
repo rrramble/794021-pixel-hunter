@@ -16,6 +16,12 @@ export const showWindow = (node) => {
   MAIN_NODE.append(node);
 };
 
+export const changeWindow = (innerHtml) => {
+  deleteCurrentWindow();
+  const node = makeDomNodeFromText(innerHtml);
+  showWindow(node);
+};
+
 export const isInRange = (value, min, max) => {
   return value >= min && value < max;
 };

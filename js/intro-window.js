@@ -1,6 +1,6 @@
 // Экран 'Интро'
 
-import {makeDomNodeFromText, deleteCurrentWindow, showWindow} from './utils.js';
+import {changeWindow} from './utils.js';
 import greetingWindow from './greeting-window.js';
 
 const NEXT_BUTTON_SELECTOR = `.intro__asterisk`;
@@ -25,9 +25,7 @@ const addNextWindowListener = () => {
 };
 
 const run = () => {
-  deleteCurrentWindow();
-  const node = makeDomNodeFromText(HTML_TEXT);
-  showWindow(node);
+  changeWindow(HTML_TEXT);
   addEventListeners();
 };
 

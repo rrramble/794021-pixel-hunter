@@ -1,6 +1,6 @@
 // Экран 'Общая статистика по всем игрокам'
 
-import {makeDomNodeFromText, deleteCurrentWindow, showWindow} from './utils.js';
+import {changeWindow} from './utils.js';
 import greetingWindow from './greeting-window.js';
 
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
@@ -132,9 +132,7 @@ const addPreviousWindowListener = () => {
 };
 
 const run = () => {
-  deleteCurrentWindow();
-  const node = makeDomNodeFromText(HTML_TEXT);
-  showWindow(node);
+  changeWindow(HTML_TEXT);
   addEventListeners();
 };
 
