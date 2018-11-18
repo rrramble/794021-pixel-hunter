@@ -1,10 +1,16 @@
 // Экран 'Игровой экран с двумя изображениями'
 
-import {changeWindow} from './utils.js';
+import {changeWindow, getCountInputsChecked} from './utils.js';
 import greetingWindow from './greeting-window.js';
+import game2Window from './game-2-window.js';
 
+const ANSWERS_COUNT = 2;
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
+const ANSWERS_FORM_SELECTOR = `.game__content`;
+const INPUTS_SELECTOR = `.game__content .game__option input`;
+
 let previousButtonNode;
+let answersFormNode;
 
 const HTML_TEXT = `
   <header class="header">
@@ -67,12 +73,23 @@ const HTML_TEXT = `
 
 const addEventListeners = () => {
   addPreviousWindowListener();
+  addUserAnswerListeners();
 };
 
 const addPreviousWindowListener = () => {
   previousButtonNode = document.querySelector(PREVIOUS_BUTTON_SELECTOR);
   previousButtonNode.addEventListener(`click`, () => {
     greetingWindow();
+  });
+};
+
+const addUserAnswerListeners = () => {
+  answersFormNode = document.querySelector(ANSWERS_FORM_SELECTOR);
+  const inputNodes = [...answersFormNode.querySelectorAll(INPUTS_SELECTOR)];
+  answersFormNode.addEventListener(`click`, () => {
+    if (getCountInputsChecked(inputNodes) >= ANSWERS_COUNT) {
+      game2Window();
+    }
   });
 };
 

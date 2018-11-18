@@ -26,6 +26,12 @@ export const enableInput = (domNode, shouldBeEnabled) => {
   domNode.disabled = !shouldBeEnabled;
 };
 
+export const getCountInputsChecked = (inputNodes) => {
+  return inputNodes.reduce((accu, inputNode) => {
+    return inputNode.checked ? ++accu : accu;
+  }, 0);
+};
+
 export const isInRange = (value, min, max) => {
   return value >= min && value < max;
 };
