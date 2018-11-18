@@ -1,7 +1,7 @@
 // Экран 'Интро'
 
 import {changeWindow} from './utils.js';
-import greetingWindow from './greeting-window.js';
+import nextWindow from './greeting-window.js';
 
 const NEXT_BUTTON_SELECTOR = `.intro__asterisk`;
 let nextButtonNode;
@@ -19,7 +19,7 @@ const addEventListeners = () => {
 
 const addNextWindowListener = () => {
   nextButtonNode = document.querySelector(NEXT_BUTTON_SELECTOR);
-  nextButtonNode.addEventListener(`click`, greetingWindow);
+  nextButtonNode.addEventListener(`click`, nextWindow);
 };
 
 const run = () => {

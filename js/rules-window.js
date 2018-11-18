@@ -2,7 +2,7 @@
 
 import {changeWindow, enableInput} from './utils.js';
 import greetingWindow from './greeting-window.js';
-import game1Window from './game-1-window.js';
+import nextWindow from './game-1-window.js';
 
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
 const NAME_INPUT_SELECTOR = `.rules__input`;
@@ -65,7 +65,7 @@ const addNameInputListener = () => {
 const addSendFormListener = () => {
   sendButtonNode.addEventListener(`click`, (evt) => {
     evt.preventDefault();
-    game1Window();
+    nextWindow();
   });
 };
 

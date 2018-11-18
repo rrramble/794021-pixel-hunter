@@ -2,7 +2,7 @@
 
 import {changeWindow, getCountInputsChecked} from './utils.js';
 import greetingWindow from './greeting-window.js';
-import game2Window from './game-2-window.js';
+import nextWindow from './game-2-window.js';
 
 const ANSWERS_COUNT = 2;
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
@@ -88,7 +88,7 @@ const addUserAnswerListeners = () => {
   const inputNodes = [...answersFormNode.querySelectorAll(INPUTS_SELECTOR)];
   answersFormNode.addEventListener(`click`, () => {
     if (getCountInputsChecked(inputNodes) >= ANSWERS_COUNT) {
-      game2Window();
+      nextWindow();
     }
   });
 };
