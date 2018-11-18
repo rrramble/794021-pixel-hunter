@@ -1,11 +1,12 @@
 // Экран 'Правила игры'
 
-import {changeWindow} from './utils.js';
+import {changeWindow, enableInput} from './utils.js';
 import greetingWindow from './greeting-window.js';
+import game1Window from './game-1-window.js';
 
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
-
-let previousButtonNode;
+const NAME_INPUT_SELECTOR = `.rules__input`;
+const SEND_BUTTON_SELECTOR = `.rules__button`;
 
 const HTML_TEXT = `
   <header class="header">
@@ -37,8 +38,14 @@ const HTML_TEXT = `
   </section>
 `;
 
+let previousButtonNode;
+let nameInputNode;
+let sendButtonNode;
+
 const addEventListeners = () => {
   addPreviousWindowListener();
+  addNameInputListener();
+  addSendFormListener();
 };
 
 const addPreviousWindowListener = () => {
@@ -46,6 +53,26 @@ const addPreviousWindowListener = () => {
   previousButtonNode.addEventListener(`click`, () => {
     greetingWindow();
   });
+};
+
+const addNameInputListener = () => {
+  nameInputNode = document.querySelector(NAME_INPUT_SELECTOR);
+  sendButtonNode = document.querySelector(SEND_BUTTON_SELECTOR);
+
+  nameInputNode.addEventListener(`keyup`, () => {
+    enableInput(sendButtonNode, isInputNameValid());
+  });
+};
+
+const addSendFormListener = () => {
+  sendButtonNode.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    game1Window();
+  });
+};
+
+const isInputNameValid = () => {
+  return !!nameInputNode.value;
 };
 
 const run = () => {

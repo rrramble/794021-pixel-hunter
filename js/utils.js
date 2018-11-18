@@ -22,6 +22,10 @@ export const changeWindow = (innerHtml) => {
   showWindow(node);
 };
 
+export const enableInput = (domNode, shouldBeEnabled) => {
+  domNode.disabled = !shouldBeEnabled;
+};
+
 export const isInRange = (value, min, max) => {
   return value >= min && value < max;
 };
