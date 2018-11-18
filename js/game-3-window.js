@@ -1,10 +1,15 @@
 // Экран 'Игровой экран с тремя изображениями'
 
-import {changeWindow} from './utils.js';
+import {changeWindow, hasEventTargetClassName} from './utils.js';
 import greetingWindow from './greeting-window.js';
+import nextWindow from './stats-window.js';
 
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
+const ANSWERS_FORM_SELECTOR = `.game__content`;
+const INPUTS_CLASS_NAME = `game__option`;
+
 let previousButtonNode;
+let answersFormNode;
 
 const HTML_TEXT = `
   <header class="header">
@@ -54,12 +59,22 @@ const HTML_TEXT = `
 
 const addEventListeners = () => {
   addPreviousWindowListener();
+  addUserAnswerListeners();
 };
 
 const addPreviousWindowListener = () => {
   previousButtonNode = document.querySelector(PREVIOUS_BUTTON_SELECTOR);
   previousButtonNode.addEventListener(`click`, () => {
     greetingWindow();
+  });
+};
+
+const addUserAnswerListeners = () => {
+  answersFormNode = document.querySelector(ANSWERS_FORM_SELECTOR);
+  answersFormNode.addEventListener(`click`, (evt) => {
+    if (hasEventTargetClassName(evt, INPUTS_CLASS_NAME)) {
+      nextWindow();
+    }
   });
 };
 

@@ -32,6 +32,20 @@ export const getCountInputsChecked = (inputNodes) => {
   }, 0);
 };
 
+export const hasEventTargetClassName = (evt, className) => {
+  const hasNodeClassName = (node) => {
+    if (node.classList.contains(className)) {
+      return true;
+    }
+
+    return !node.parentElement ?
+      false :
+      hasNodeClassName(node.parentElement);
+  };
+
+  return hasNodeClassName(evt.target);
+};
+
 export const isInRange = (value, min, max) => {
   return value >= min && value < max;
 };
