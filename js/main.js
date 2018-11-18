@@ -1,5 +1,3 @@
-'use strict';
-
 const TemplateGameWindowHtmlSelectors = [
   `#intro`,
   `#greeting`,
