@@ -1,8 +1,12 @@
-import {makeDomNodeFromText} from './utils.js';
+// Экран 'Приветствие'
 
-// <!-- Приветствие -->
+import {makeDomNodeFromText, deleteCurrentWindow, showWindow} from './utils.js';
+import rulesWindow from './rules-window.js';
 
-const htmlText = `
+const NEXT_BUTTON_SELECTOR = `.greeting__continue`;
+let nextButtonNode;
+
+const HTML_TEXT = `
   <section class="greeting central--blur">
     <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
     <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>
@@ -25,4 +29,22 @@ const htmlText = `
   </section>
 `;
 
-export default makeDomNodeFromText(htmlText);
+const addEventListeners = () => {
+  addNextWindowListener();
+};
+
+const addNextWindowListener = () => {
+  nextButtonNode = document.querySelector(NEXT_BUTTON_SELECTOR);
+  nextButtonNode.addEventListener(`click`, () => {
+    rulesWindow();
+  });
+};
+
+const run = () => {
+  deleteCurrentWindow();
+  const node = makeDomNodeFromText(HTML_TEXT);
+  showWindow(node);
+  addEventListeners();
+};
+
+export default run;

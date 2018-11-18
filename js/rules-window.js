@@ -1,8 +1,13 @@
-import {makeDomNodeFromText} from './utils.js';
+// Экран 'Правила игры'
 
-// <!-- Правила игры -->
+import {makeDomNodeFromText, deleteCurrentWindow, showWindow} from './utils.js';
+import greetingWindow from './greeting-window.js';
 
-const htmlText = `
+const PREVIOUS_BUTTON_SELECTOR = `.back`;
+
+let previousButtonNode;
+
+const HTML_TEXT = `
   <header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
@@ -32,4 +37,22 @@ const htmlText = `
   </section>
 `;
 
-export default makeDomNodeFromText(htmlText);
+const addEventListeners = () => {
+  addPreviousWindowListener();
+};
+
+const addPreviousWindowListener = () => {
+  previousButtonNode = document.querySelector(PREVIOUS_BUTTON_SELECTOR);
+  previousButtonNode.addEventListener(`click`, () => {
+    greetingWindow();
+  });
+};
+
+const run = () => {
+  deleteCurrentWindow();
+  const node = makeDomNodeFromText(HTML_TEXT);
+  showWindow(node);
+  addEventListeners();
+};
+
+export default run;
