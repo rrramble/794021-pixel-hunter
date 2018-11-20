@@ -120,10 +120,10 @@ gulp.task(`test`, function () {
   .src([`js/**/*.test.js`])
   .pipe(rollup({
     plugins: [
-      commonjs()           // Сообщает Rollup, что модули можно загружать из node_modules
-    ]}, `cjs`))            // Выходной формат тестов: `CommonJS`
+      commonjs() // Сообщает Rollup, что модули можно загружать из node_modules
+    ]}, `cjs`)) // Выходной формат тестов: `CommonJS`
   .pipe(gulp.dest(`build/test`))
   .pipe(mocha({
-    reporter: `spec`       // Вид отображения результатов тестирования
+    reporter: `spec` // Вид отображения результатов тестирования
   }));
 });
