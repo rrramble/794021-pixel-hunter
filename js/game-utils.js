@@ -34,3 +34,12 @@ export const calculateScore = (answers, restLivesCount) => {
     0;
   return answersScore + pointForLives;
 };
+
+export const decreaseLives = (game) => {
+  let newGame = Object.assign({}, game);
+
+  if (newGame.restLives > 0) {
+    newGame.restLives--;
+  }
+  return newGame;
+};
