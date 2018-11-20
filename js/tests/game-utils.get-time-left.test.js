@@ -25,14 +25,14 @@ const set3 = {
   expectedResult: 0
 };
 
-describe(`getTimeLeft()`, () => {
-  describe(`Normal calculations`, () => {
+describe(`game-utils.js: getTimeLeft()`, () => {
+  describe(`Normal case data`, () => {
     it(`tests set1`, () => {
       assert.strictEqual(testedFunction(set1.value.timeLimit, set1.value.timeElapsed), set1.expectedResult);
     });
   });
 
-  describe(`Corner cases`, () => {
+  describe(`Corner case data`, () => {
     it(`tests set2`, () => {
       assert.strictEqual(testedFunction(set2.value.timeLimit, set2.value.timeElapsed), set2.expectedResult);
     });

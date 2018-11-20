@@ -96,20 +96,17 @@ const set6 = {
   }
 };
 
-describe(`Utils`, () => {
-  describe(`decreaseLives()`, () => {
+describe(`game-utils.js: decreaseLives()`, () => {
+  describe(`Corner case data`, () => {
     it(`tests set1`, () => {
       assert.deepEqual(testedFunction(set1.value), set1.expectedResult);
     });
-
-    it(`tests set1`, () => {
-      assert.deepEqual(testedFunction(set1.value), set1.expectedResult);
-    });
-
     it(`tests set2`, () => {
       assert.deepEqual(testedFunction(set2.value), set2.expectedResult);
     });
+  });
 
+  describe(`Normal case data`, () => {
     it(`tests set3`, () => {
       assert.deepEqual(testedFunction(set3.value), set3.expectedResult);
     });

@@ -79,12 +79,14 @@ const set5 = {
   expectedResult: 300
 };
 
-describe(`Utils`, () => {
-  describe(`calculateGameScore()`, () => {
+describe(`game-utils.js: calculateScore()`, () => {
+  describe(`Corner case data`, () => {
     it(`returns -1 when less than 10 answers`, () => {
       assert.equal(testedFunction(set1.answers, set1.restLives), set1.expectedResult);
     });
+  });
 
+  describe(`Normal data`, () => {
     it(`counts score of set2`, () => {
       assert.equal(testedFunction(set2.answers, set2.restLives), set2.expectedResult);
     });
