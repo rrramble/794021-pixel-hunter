@@ -36,7 +36,7 @@ export const calculateScore = (answers, restLivesCount) => {
 };
 
 export const decreaseLives = (game) => {
-  let newGame = Object.assign({}, game);
+  const newGame = Object.assign({}, game);
 
   if (newGame.restLives > 0) {
     newGame.restLives--;
