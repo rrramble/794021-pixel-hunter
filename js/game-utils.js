@@ -43,3 +43,7 @@ export const decreaseLives = (game) => {
   }
   return newGame;
 };
+
+export const getTimeLeft = (timeLimit, timeElapsed) => {
+  return timeLimit > timeElapsed ? timeLimit - timeElapsed : 0;
+};
