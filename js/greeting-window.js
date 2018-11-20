@@ -28,7 +28,7 @@ const data = {
       </button>
     </section>
   `
-}
+};
 
 const run = () => {
   const newWindow = new GameWindow(data);

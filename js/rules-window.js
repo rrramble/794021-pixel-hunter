@@ -51,8 +51,8 @@ const verifyName = (evt) => {
 };
 
 const sendForm = (evt) => {
-    evt.preventDefault();
-    nextWindow();
+  evt.preventDefault();
+  nextWindow();
 };
 
 const isInputNameValid = (inputNode) => {
