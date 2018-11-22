@@ -1,5 +1,4 @@
 // Универсальный экран
-import {changeWindow} from './utils.js';
 
 export default class GameWindow {
   constructor(data) {
