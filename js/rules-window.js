@@ -52,6 +52,7 @@ const verifyName = (evt) => {
 
 const sendForm = (evt) => {
   evt.preventDefault();
+  sendButtonNode = undefined;
   nextWindow();
 };
 
