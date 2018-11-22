@@ -42,12 +42,10 @@ export const getCountInputsChecked = (inputNodes) => {
 
 export const hasEventTargetClassName = (evt, className) => {
   const hasNodeClassName = (node) => {
-    if (node.classList.contains(className)) {
-      return true;
+    if (typeof node.classList.contains !== `function`) {
+      return false;
     }
-
-    return !node.parentElement ?
-      false :
+    return node.classList.contains(className) ||
       hasNodeClassName(node.parentElement);
   };
 
