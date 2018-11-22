@@ -1,4 +1,5 @@
 // Универсальный экран
+import {changeWindow} from './utils.js';
 
 export default class GameWindow {
   constructor(data) {
@@ -10,7 +11,7 @@ export default class GameWindow {
     this.eventListeners.push({htmlSelector, eventType, cb});
   }
 
-  addEventListeners() {
+  _addEventListeners() {
     this.eventListeners.forEach((el) => {
       el.htmlNode = document.querySelector(el.htmlSelector);
       if (el.htmlNode) {
@@ -20,11 +21,11 @@ export default class GameWindow {
   }
 
   setRenderFunction(cb) {
-    this.renderFunction = cb;
+    this._renderFunction = cb;
   }
 
   render() {
-    this.renderFunction(this.innerHtml);
-    this.addEventListeners();
+    this._renderFunction(this.innerHtml);
+    this._addEventListeners();
   }
 }
