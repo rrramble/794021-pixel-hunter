@@ -1,4 +1,12 @@
-const MAIN_NODE = document.querySelector(`#main`);
+const MAIN_NODE_SELECTOR = `#main`;
+let mainNode;
+
+const getMainNode = () => {
+  if (!mainNode) {
+    mainNode = document.querySelector(MAIN_NODE_SELECTOR);
+  }
+  return mainNode;
+};
 
 const makeDomNodeFromText = (text) => {
   const node = document.createElement(`div`);
@@ -7,13 +15,13 @@ const makeDomNodeFromText = (text) => {
 };
 
 const deleteCurrentWindow = () => {
-  for (let i = MAIN_NODE.children.length; i--;) {
-    MAIN_NODE.children[i].remove();
+  for (let i = getMainNode().children.length; i--;) {
+    getMainNode().children[i].remove();
   }
 };
 
 const showWindow = (node) => {
-  MAIN_NODE.append(node);
+  getMainNode().append(node);
 };
 
 export const changeWindow = (innerHtml) => {
