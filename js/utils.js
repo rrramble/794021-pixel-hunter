@@ -57,3 +57,13 @@ export const hasEventTargetClassName = (evt, className) => {
 export const isInRange = (value, min, max) => {
   return value >= min && value < max;
 };
+
+export const getFittedSize = (borderSize, imageSize) => {
+  const coefficientWidth = borderSize.width < imageSize.width ? imageSize.width / borderSize.width : 1;
+  const coefficientHeight = borderSize.height < imageSize.height ? imageSize.height / borderSize.height : 1;
+  const coefficient = Math.max(coefficientWidth, coefficientHeight);
+  return {
+    width: imageSize.width / coefficient,
+    height: imageSize.height / coefficient
+  };
+};
