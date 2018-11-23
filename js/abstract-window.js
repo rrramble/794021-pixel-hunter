@@ -11,7 +11,7 @@ export default class AbstractWindow {
   pushEventListeners(htmlSelector, eventType, cb) {
     if (!this._eventListeners) {
       this._eventListeners = [];
-    };
+    }
     this._eventListeners.push({htmlSelector, eventType, cb});
   }
 
