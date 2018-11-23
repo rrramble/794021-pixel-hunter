@@ -1,9 +1,9 @@
 // Экран 'Правила игры'
 
-import GameWindow from './game-window.js';
+import AbstractWindow from './abstract-window.js';
 import {changeWindow, enableFormInput} from './utils.js';
 import backWindow from './greeting-window.js';
-import nextWindow from './game-1-window.js';
+import nextWindow from './game.js';
 
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
 const NAME_INPUT_SELECTOR = `.rules__input`;
@@ -61,12 +61,12 @@ const isInputNameValid = (inputNode) => {
 };
 
 const run = () => {
-  const newWindow = new GameWindow(data);
-  newWindow.pushEventListener(PREVIOUS_BUTTON_SELECTOR, `click`, backWindow);
-  newWindow.pushEventListener(NAME_INPUT_SELECTOR, `keyup`, verifyName);
-  newWindow.pushEventListener(SEND_BUTTON_SELECTOR, `click`, sendForm);
-  newWindow.setRenderFunction(changeWindow);
-  return newWindow.render.bind(newWindow);
+  const thisWindow = new AbstractWindow([data.innerHtml]);
+  thisWindow.pushEventListeners(PREVIOUS_BUTTON_SELECTOR, `click`, backWindow);
+  thisWindow.pushEventListeners(NAME_INPUT_SELECTOR, `keyup`, verifyName);
+  thisWindow.pushEventListeners(SEND_BUTTON_SELECTOR, `click`, sendForm);
+  thisWindow.setRenderFunction(changeWindow);
+  return thisWindow.run();
 };
 
-export default run();
+export default run;

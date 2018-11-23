@@ -1,34 +1,16 @@
 // Экран 'Игровой экран с тремя изображениями'
 
+import GameWindow from './game-window.js';
 import {changeWindow, hasEventTargetClassName} from './utils.js';
-import greetingWindow from './greeting-window.js';
-import nextWindow from './stats-window.js';
 
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
-const ANSWERS_FORM_SELECTOR = `.game__content`;
+const INPUTS_SELECTOR = `.game__option`;
 const INPUTS_CLASS_NAME = `game__option`;
 
-let previousButtonNode;
-let answersFormNode;
+let updateGameStateCb;
+let playFromStartCb;
 
-const HTML_TEXT = `
-  <header class="header">
-    <button class="back">
-      <span class="visually-hidden">Вернуться к началу</span>
-      <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
-        <use xlink:href="img/sprite.svg#arrow-left"></use>
-      </svg>
-      <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
-        <use xlink:href="img/sprite.svg#logo-small"></use>
-      </svg>
-    </button>
-    <div class="game__timer">NN</div>
-    <div class="game__lives">
-      <img src="img/heart__empty.svg" class="game__heart" alt="Life" width="31" height="27">
-      <img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">
-      <img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">
-    </div>
-  </header>
+const GAME_TEMPLATE = `
   <section class="game">
     <p class="game__task">Найдите рисунок среди изображений</p>
     <form class="game__content  game__content--triple">
@@ -57,30 +39,26 @@ const HTML_TEXT = `
   </section>
 `;
 
-const addEventListeners = () => {
-  addPreviousWindowListener();
-  addUserAnswerListeners();
+const verifyPlayFromStart = () => {
+  playFromStartCb();
 };
 
-const addPreviousWindowListener = () => {
-  previousButtonNode = document.querySelector(PREVIOUS_BUTTON_SELECTOR);
-  previousButtonNode.addEventListener(`click`, () => {
-    greetingWindow();
-  });
+const verifyUserClick = (evt) => {
+  if (hasEventTargetClassName(evt, INPUTS_CLASS_NAME)) {
+    updateGameStateCb();
+  }
 };
 
-const addUserAnswerListeners = () => {
-  answersFormNode = document.querySelector(ANSWERS_FORM_SELECTOR);
-  answersFormNode.addEventListener(`click`, (evt) => {
-    if (hasEventTargetClassName(evt, INPUTS_CLASS_NAME)) {
-      nextWindow();
-    }
-  });
-};
+const run = (question, gameState, playFromStart, updateGameState) => {
+  updateGameStateCb = updateGameState;
+  playFromStartCb = playFromStart;
+  const thisWindow = new GameWindow([GAME_TEMPLATE]);
 
-const run = () => {
-  changeWindow(HTML_TEXT);
-  addEventListeners();
+  thisWindow.pushEventListeners(PREVIOUS_BUTTON_SELECTOR, `click`, verifyPlayFromStart);
+  thisWindow.pushEventListeners(INPUTS_SELECTOR, `click`, verifyUserClick);
+  thisWindow.setRenderFunction(changeWindow);
+  thisWindow.setData(question);
+  thisWindow.run();
 };
 
 export default run;

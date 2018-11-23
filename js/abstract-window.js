@@ -8,6 +8,10 @@ export default class AbstractWindow {
     });
   }
 
+  addTemplateBefore(template) {
+    this._templates.shift(template);
+  }
+
   pushEventListeners(htmlSelector, eventType, cb) {
     if (!this._eventListeners) {
       this._eventListeners = [];

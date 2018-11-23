@@ -1,6 +1,6 @@
 // Экран 'Интро'
 
-import GameWindow from './game-window.js';
+import AbstractWindow from './abstract-window.js';
 import {changeWindow} from './utils.js';
 import nextWindow from './greeting-window.js';
 
@@ -15,10 +15,10 @@ const data = {
 };
 
 const run = () => {
-  const newWindow = new GameWindow(data);
-  newWindow.pushEventListener(NEXT_BUTTON_SELECTOR, `click`, nextWindow);
-  newWindow.setRenderFunction(changeWindow);
-  return newWindow.render.bind(newWindow);
+  const thisWindow = new AbstractWindow([data.innerHtml]);
+  thisWindow.pushEventListeners(NEXT_BUTTON_SELECTOR, `click`, nextWindow);
+  thisWindow.setRenderFunction(changeWindow);
+  return thisWindow.run();
 };
 
-export default run();
+export default run;

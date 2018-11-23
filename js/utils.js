@@ -24,8 +24,10 @@ const showWindow = (node) => {
   getMainNode().append(node);
 };
 
-export const changeWindow = (innerHtml) => {
-  deleteCurrentWindow();
+export const changeWindow = (innerHtml, shouldPreviousWindowBeSaved) => {
+  if (!shouldPreviousWindowBeSaved) {
+    deleteCurrentWindow();
+  }
   const node = makeDomNodeFromText(innerHtml);
   showWindow(node);
 };

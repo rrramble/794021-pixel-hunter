@@ -1,57 +1,29 @@
-// Экран 'Игровой экран с двумя изображениями'
+// Экран 'Игровой экран с одним изображением'
 
+import GameWindow from './game-window.js';
 import {changeWindow, getCountInputsChecked} from './utils.js';
-import greetingWindow from './greeting-window.js';
-import nextWindow from './game-2-window.js';
 
-const ANSWERS_COUNT = 2;
+const ANSWERS_COUNT = 1;
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
 const ANSWERS_FORM_SELECTOR = `.game__content`;
 const INPUTS_SELECTOR = `.game__content .game__option input`;
 
-let previousButtonNode;
 let answersFormNode;
+let updateGameStateCb;
+let playFromStartCb;
 
-const HTML_TEXT = `
-  <header class="header">
-    <button class="back">
-      <span class="visually-hidden">Вернуться к началу</span>
-      <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
-        <use xlink:href="img/sprite.svg#arrow-left"></use>
-      </svg>
-      <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
-        <use xlink:href="img/sprite.svg#logo-small"></use>
-      </svg>
-    </button>
-    <div class="game__timer">NN</div>
-    <div class="game__lives">
-      <img src="img/heart__empty.svg" class="game__heart" alt=" Missed Life" width="31" height="27">
-      <img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">
-      <img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">
-    </div>
-  </header>
+const GAME_TEMPLATE = `
   <section class="game">
-    <p class="game__task">Угадайте для каждого изображения фото или рисунок?</p>
-    <form class="game__content">
+    <p class="game__task">Угадай, фото или рисунок?</p>
+    <form class="game__content  game__content--wide">
       <div class="game__option">
-        <img src="http://placehold.it/468x458" alt="Option 1" width="468" height="458">
-        <label class="game__answer game__answer--photo">
+        <img src="http://placehold.it/705x455" alt="Option 1" width="705" height="455">
+        <label class="game__answer  game__answer--photo">
           <input class="visually-hidden" name="question1" type="radio" value="photo">
           <span>Фото</span>
         </label>
-        <label class="game__answer game__answer--paint">
-          <input class="visually-hidden" name="question1" type="radio" value="paint">
-          <span>Рисунок</span>
-        </label>
-      </div>
-      <div class="game__option">
-        <img src="http://placehold.it/468x458" alt="Option 2" width="468" height="458">
-        <label class="game__answer  game__answer--photo">
-          <input class="visually-hidden" name="question2" type="radio" value="photo">
-          <span>Фото</span>
-        </label>
         <label class="game__answer  game__answer--paint">
-          <input class="visually-hidden" name="question2" type="radio" value="paint">
+          <input class="visually-hidden" name="question1" type="radio" value="paint">
           <span>Рисунок</span>
         </label>
       </div>
@@ -61,41 +33,38 @@ const HTML_TEXT = `
       <li class="stats__result stats__result--slow"></li>
       <li class="stats__result stats__result--fast"></li>
       <li class="stats__result stats__result--correct"></li>
+      <li class="stats__result stats__result--wrong"></li>
       <li class="stats__result stats__result--unknown"></li>
+      <li class="stats__result stats__result--slow"></li>
       <li class="stats__result stats__result--unknown"></li>
-      <li class="stats__result stats__result--unknown"></li>
-      <li class="stats__result stats__result--unknown"></li>
-      <li class="stats__result stats__result--unknown"></li>
+      <li class="stats__result stats__result--fast"></li>
       <li class="stats__result stats__result--unknown"></li>
     </ul>
   </section>
 `;
 
-const addEventListeners = () => {
-  addPreviousWindowListener();
-  addUserAnswerListeners();
+const verifyPlayFromStart = () => {
+  playFromStartCb();
 };
 
-const addPreviousWindowListener = () => {
-  previousButtonNode = document.querySelector(PREVIOUS_BUTTON_SELECTOR);
-  previousButtonNode.addEventListener(`click`, () => {
-    greetingWindow();
-  });
-};
-
-const addUserAnswerListeners = () => {
+const verifyUserClick = () => {
   answersFormNode = document.querySelector(ANSWERS_FORM_SELECTOR);
   const inputNodes = [...answersFormNode.querySelectorAll(INPUTS_SELECTOR)];
-  answersFormNode.addEventListener(`click`, () => {
-    if (getCountInputsChecked(inputNodes) >= ANSWERS_COUNT) {
-      nextWindow();
-    }
-  });
+  if (getCountInputsChecked(inputNodes) >= ANSWERS_COUNT) {
+    updateGameStateCb();
+  }
 };
 
-const run = () => {
-  changeWindow(HTML_TEXT);
-  addEventListeners();
+const run = (question, gameState, playFromStart, updateGameState) => {
+  updateGameStateCb = updateGameState;
+  playFromStartCb = playFromStart;
+  const thisWindow = new GameWindow([GAME_TEMPLATE]);
+
+  thisWindow.pushEventListeners(PREVIOUS_BUTTON_SELECTOR, `click`, verifyPlayFromStart);
+  thisWindow.pushEventListeners(INPUTS_SELECTOR, `click`, verifyUserClick);
+  thisWindow.setRenderFunction(changeWindow);
+  thisWindow.setData(question);
+  thisWindow.run();
 };
 
 export default run;
