@@ -1,22 +1,22 @@
 const images = [
   {
-    url: `http://placehold.it/100x200`,
-    width: 100,
-    height: 200,
+    url: `http://placehold.it/${468 * 2}x${458 * 2}`,
+    width: 468 * 2,
+    height: 458 * 2,
     isPhoto: true,
   },
 
   {
-    url: `http://placehold.it/1000x800`,
-    width: 200,
-    height: 300,
+    url: `http://placehold.it/${705 * 2}x${455 * 2}`,
+    width: 705 * 2,
+    height: 455 * 2,
     isPhoto: true,
   },
 
   {
-    url: `http://placehold.it/800x600`,
-    width: 800,
-    height: 600,
+    url: `http://placehold.it/${705 * 3}x${455 * 3}`,
+    width: 705 * 3,
+    height: 455 * 3,
     isPhoto: false,
   },
 
