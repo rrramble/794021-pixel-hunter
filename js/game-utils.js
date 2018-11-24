@@ -9,28 +9,39 @@ const PointsForAnswer = {
   REST_LIVE: 50
 };
 
-export const calculateScore = (answers, restLivesCount) => {
-  const isAnswerQuick = (answer) => answer.seconds < 10;
-  const isAnswerSlow = (answer) => answer.seconds > 20;
-  const isAnswerCountLessThanQuestionCount = () => answers.length < QUESTONS_COUNT;
+const IconClassName = {
+  NOT_ANSWERED: `stats__result--unknown`,
+  NOT_CORRECT: `stats__result--wrong`,
+  CORRECT_SLOW: `stats__result--slow`,
+  CORRECT_QUICK: `stats__result--fast`,
+  CORRECT: `stats__result--correct`,
+};
 
+const isAnswerQuick = (level) => level.secondsLeft > 20;
+const isAnswerSlow = (level) => level.secondsLeft < 10;
+
+const calculateLevelScore = (level) => {
+  if (!level.isAnswerCorrect) {
+    return 0;
+  }
+  let accu = PointsForAnswer.CORRECT;
+  if (isAnswerQuick(level)) {
+    accu += PointsForAnswer.QUICK;
+  } else if (isAnswerSlow(level)) {
+    accu += PointsForAnswer.SLOW;
+  }
+  return accu;
+};
+
+export const calculateScore = (answers, restLivesCount) => {
+  const isAnswerCountLessThanQuestionCount = () => answers.length < QUESTONS_COUNT;
   if (isAnswerCountLessThanQuestionCount()) {
     return -1;
   }
-
   const answersScore = answers.reduce((accu, answer) => {
-    if (!answer.isCorrect) {
-      return accu;
-    }
-    accu += PointsForAnswer.CORRECT;
-    if (isAnswerQuick(answer)) {
-      accu += PointsForAnswer.QUICK;
-    } else if (isAnswerSlow(answer)) {
-      accu += PointsForAnswer.SLOW;
-    }
+    accu += calculateLevelScore(answer);
     return accu;
   }, 0);
-
   const pointForLives = answersScore > 0 ?
     restLivesCount * PointsForAnswer.REST_LIVE :
     0;
@@ -58,12 +69,30 @@ export const renderNode = (node, shouldPreviousWindowBeSaved) => {
 };
 
 export const getFooterScoreIconClassNames = (gameState) => {
-  return gameState.levels.map(() => `stats__result--unknown`);
-  /*
-    <li class="stats__result stats__result--wrong"></li>
-    <li class="stats__result stats__result--slow"></li>
-    <li class="stats__result stats__result--fast"></li>
-    <li class="stats__result stats__result--correct"></li>
-    <li class="stats__result stats__result--unknown"></li>
-  */
+  return gameState.levels.map((level, index) => {
+    switch (true) {
+      case (index >= gameState.currentLevel || !level.isAnswered):
+        return IconClassName.NOT_ANSWERED;
+      case (!level.isAnswerCorrect):
+        return IconClassName.NOT_CORRECT;
+      case (level.isAnswerSlow):
+        return IconClassName.CORRECT_SLOW;
+      case (level.isAnswerQuick):
+        return IconClassName.CORRECT_QUICK;
+      default:
+        return IconClassName.CORRECT;
+    }
+  });
+};
+
+export const getLevelWithResult = (level) => {
+  let newLevel = Object.assign({}, level);
+  newLevel.isAnswered = true; // find out if any DOM-input is selected
+  newLevel.isAnswerCorrect = true; // find out if the correct DOM-input is selected
+
+  newLevel.secondsLeft = Math.floor(Math.random() * 30); // Mock seconds left
+  newLevel.isAnswerQuick = isAnswerQuick(newLevel);
+  newLevel.isAnswerSlow = isAnswerSlow(newLevel);
+  newLevel.score = calculateLevelScore(newLevel);
+  return newLevel;
 };
