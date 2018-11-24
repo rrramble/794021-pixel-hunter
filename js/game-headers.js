@@ -50,7 +50,7 @@ const getGameFooterGameScore = (gameState) => {
     <ul class="stats">
       ${getFooterScoreIconClassNames(gameState).map((className) => `
         <li class="stats__result ${className}"></li>
-      `)}
+      `).join(``)}
     </ul>
   `;
 };
@@ -97,7 +97,7 @@ export const getGameField2 = (gameState) => {
             <span>Рисунок</span>
           </label>
         </div>
-      `)}
+      `).join(``)}
     </form>
     ${getGameFooterGameScore(gameState)}
   </section>
@@ -114,7 +114,7 @@ export const getGameField3 = (gameState) => {
         <div class="game__option">
           <img src="${image.url}" alt="Option ${index + 1}" width="${image.width}" height="${image.height}">
         </div>
-      `)}
+      `).join(``)}
     </form>
     ${getGameFooterGameScore(gameState)}
   </section>
