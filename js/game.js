@@ -24,7 +24,7 @@ let gameState;
 const initializeGameState = () => {
   const levels = questions.map((question) => {
     return {
-      timeLeft: MAX_ANSWER_TIME,
+      secondsLeft: MAX_ANSWER_TIME,
       question,
     };
   });

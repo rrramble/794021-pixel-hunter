@@ -1,3 +1,5 @@
+import {deleteCurrentWindow, showWindow} from './utils.js';
+
 const QUESTONS_COUNT = 10;
 
 const PointsForAnswer = {
@@ -46,4 +48,22 @@ export const decreaseLives = (game) => {
 
 export const getTimeLeft = (timeLimit, timeElapsed) => {
   return timeLimit > timeElapsed ? timeLimit - timeElapsed : 0;
+};
+
+export const renderNode = (node, shouldPreviousWindowBeSaved) => {
+  if (!shouldPreviousWindowBeSaved) {
+    deleteCurrentWindow();
+  }
+  showWindow(node);
+};
+
+export const getFooterScoreIconClassNames = (gameState) => {
+  return gameState.levels.map(() => `stats__result--unknown`);
+  /*
+    <li class="stats__result stats__result--wrong"></li>
+    <li class="stats__result stats__result--slow"></li>
+    <li class="stats__result stats__result--fast"></li>
+    <li class="stats__result stats__result--correct"></li>
+    <li class="stats__result stats__result--unknown"></li>
+  */
 };

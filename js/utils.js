@@ -14,13 +14,13 @@ const makeDomNodeFromText = (text) => {
   return node;
 };
 
-const deleteCurrentWindow = () => {
+export const deleteCurrentWindow = () => {
   for (let i = getMainNode().children.length; i--;) {
     getMainNode().children[i].remove();
   }
 };
 
-const showWindow = (node) => {
+export const showWindow = (node) => {
   getMainNode().append(node);
 };
 
