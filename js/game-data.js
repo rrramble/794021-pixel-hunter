@@ -1,23 +1,7 @@
 // Game controller window
 
-import game1image from './game-1-window.js';
-import game2images from './game-2-window.js';
-import game3images from './game-3-window.js';
-
 const MAX_LIVES = 3;
 const MAX_ANSWER_TIME = 3;
-
-const GameType = {
-  '1': {
-    CB: game1image,
-  },
-  '2': {
-    CB: game2images,
-  },
-  '3': {
-    CB: game3images,
-  },
-};
 
 class Level {
   constructor(question) {
@@ -50,10 +34,6 @@ class Level {
 
 class GameData {
   constructor() {
-  }
-
-  get cb() {
-    return GameType[this.currentQuestionImageCount].CB;
   }
 
   get currentLevel() {
