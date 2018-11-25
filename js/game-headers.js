@@ -119,8 +119,8 @@ export const getGameField3 = (gameData) => {
 `;
 };
 
-export const getGameField = (gameData, questionCount) => {
-  switch (questionCount) {
+export const getGameField = (gameData) => {
+  switch (gameData.currentQuestionImageCount) {
     case 1:
       return getGameField1(gameData);
     case 2:

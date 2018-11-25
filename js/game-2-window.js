@@ -20,7 +20,7 @@ const verifyPlayFromStart = () => {
 const verifyUserClick = () => {
   answersFormNode = document.querySelector(ANSWERS_FORM_SELECTOR);
   const inputNodes = [...answersFormNode.querySelectorAll(INPUTS_SELECTOR)];
-  if (getCountInputsChecked(inputNodes) >= ANSWERS_COUNT) {
+  if (getCountInputsChecked(inputNodes) >= gameData.currentQuestionImageCount) {
     updateGameStateCb();
   }
 };
@@ -28,8 +28,9 @@ const verifyUserClick = () => {
 const run = (question, gameState, playFromStart, updateGameState) => {
   updateGameStateCb = updateGameState;
   playFromStartCb = playFromStart;
+  gameData = gameState;
   const thisWindow = new GameWindow(
-      [getGameHeader(gameState), getGameField(gameState, ANSWERS_COUNT)]
+      [getGameHeader(gameState), getGameField(gameData)]
   );
   thisWindow.pushEventListeners(PREVIOUS_BUTTON_SELECTOR, `click`, verifyPlayFromStart);
   thisWindow.pushEventListeners(INPUTS_SELECTOR, `click`, verifyUserClick);
@@ -37,5 +38,7 @@ const run = (question, gameState, playFromStart, updateGameState) => {
   thisWindow.setData(question);
   thisWindow.run();
 };
+
+let gameData;
 
 export default run;
