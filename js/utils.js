@@ -1,4 +1,5 @@
 const MAIN_NODE_SELECTOR = `#main`;
+
 let mainNode;
 
 const getMainNode = () => {
@@ -67,3 +68,51 @@ export const getFittedSize = (borderSize, imageSize) => {
     height: imageSize.height / coefficient
   };
 };
+
+export const isAnsweredYes = (text) => {
+  return confirm(text);
+  /*
+
+  const KEY_ESC = 27;
+
+  const closeHandler = (evt) => {
+    if (evt.keycode) === KEY_ESC {
+      document.removeEventListener(`keydown`, cancelHandler);
+      domNode.remove();
+    }
+  };
+
+  const node = getConfirmationNode();
+  const closeButtonNode = node.querySelector(`.modal .modal__close`);
+  const cancelButtonNode = node.querySelector(`.modal .modal__btn.modal__btn--cancel`);
+  const okButtonNode = node.querySelector(`.modal .modal__btn.modal__btn--ok`);
+
+  okButtonNode.addEventListener(`click`, () => {
+    return ;
+  });
+
+  const domNode = document.querySelector(`body`).insertBefor(modalNode);
+  document.addEventListener(`keydown`, closeHandler);
+*/
+};
+
+/*
+const getConfirmationNode = (text) => {
+  return makeDomNodeFromText(`
+    <section class="modal">
+      <form class="modal__inner">
+        <button class="modal__close" type="button">
+          <span class="visually-hidden">Закрыть</span>
+        </button>
+        <h2 class="modal__title">Подтверждение</h2>
+        <p class="modal__text">${text}</p>
+        <div class="modal__button-wrapper">
+          <button class="modal__btn modal__btn--ok">Ок</button>
+          <button class="modal__btn modal__btn--cancel">Отмена</button>
+        </div>
+      </form>
+    </section>
+  `);
+};
+
+*/

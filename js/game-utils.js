@@ -85,14 +85,11 @@ export const getFooterScoreIconClassNames = (gameData) => {
   });
 };
 
-export const getLevelWithResult = (level) => {
-  let newLevel = Object.assign({}, level);
-  newLevel.isAnswered = true; // find out if any DOM-input is selected
-  newLevel.isAnswerCorrect = true; // find out if the correct DOM-input is selected
-
-  newLevel.secondsLeft = Math.floor(Math.random() * 30); // Mock seconds left
-  newLevel.isAnswerQuick = isAnswerQuick(newLevel);
-  newLevel.isAnswerSlow = isAnswerSlow(newLevel);
-  newLevel.score = calculateLevelScore(newLevel);
-  return newLevel;
+export const isAnswered = () => {
+  return Math.random() < 0.85; // !!! Mock result
 };
+
+export const isAnswerCorrect = () => {
+  return Math.random() < 0.85; // !!! Mock result
+};
+

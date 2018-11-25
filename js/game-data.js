@@ -3,11 +3,9 @@
 import game1image from './game-1-window.js';
 import game2images from './game-2-window.js';
 import game3images from './game-3-window.js';
-import {getLevelWithResult} from './game-utils.js';
 
 const MAX_LIVES = 3;
-const MAX_ANSWER_TIME = 2; // 30
-const SAME_SERIES_SET = true;
+const MAX_ANSWER_TIME = 3;
 
 const GameType = {
   '1': {
@@ -41,19 +39,18 @@ class Level {
     return this._secondsLeft;
   }
 
-  timeTick(delta) {
-    this._secondsLeft -= delta;
-    return this.secondsLeft;
+  tickSecond() {
+    return --this._secondsLeft;
   }
 
   get question() {
     return this._question;
   }
-};
+}
 
 class GameData {
   constructor() {
-  };
+  }
 
   get cb() {
     return GameType[this.currentQuestionImageCount].CB;
@@ -61,11 +58,11 @@ class GameData {
 
   get currentLevel() {
     return this.levels[this.currentLevelNumber];
-  };
+  }
 
   get currentLevelNumber() {
     return this.state.currentLevelNumber;
-  };
+  }
 
   get currentQuestion() {
     return this.currentLevel.question;
@@ -98,7 +95,7 @@ class GameData {
     if (timeElapsedCb) {
       this._timeElapsedCb = timeElapsedCb;
     }
-  };
+  }
 
   isGameFinished() {
     return this.currentLevelNumber >= this.levels.length;
@@ -123,15 +120,15 @@ class GameData {
 
   get state() {
     return this._state;
-  };
-
-  timeTick() {
-    const secondsLeft = this.currentLevel.timeTick(1);
-    if (secondsLeft <= 0 && this._timeElapsedCb) {
-      this._timeElapsedCb();
-    };
   }
 
-};
+  tickSecond() {
+    const secondsLeft = this.currentLevel.tickSecond();
+    if (secondsLeft <= 0 && this._timeElapsedCb) {
+      this._timeElapsedCb();
+    }
+  }
+
+}
 
 export default new GameData();

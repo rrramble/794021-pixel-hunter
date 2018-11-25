@@ -3,34 +3,28 @@
 import getQuestions from './data/mock-questions.js';
 import goBeginWindow from './greeting-window.js';
 import goStatistics from './stats-window';
-import {getLevelWithResult} from './game-utils.js';
 import GameData from './game-data.js';
+import {isAnswered, isAnswerCorrect} from './game-utils.js';
+import {isAnsweredYes} from './utils.js';
 
 const QUESTIONS_IS_NOT_SHAFFLED = true;
 const CONTINUE_STARTED_GAME = true;
-const SECONDS_TICK = 1;
-
-const isAnswered = () => {
-  return Math.random() < 0.85; // Mock result
-}
-
-const isAnswerCorrect = () => {
-  return Math.random() < 0.85; // Mock result
-}
+const MILLISECONDS_TICK = 1000;
+const CONFIRMATION_TEXT = `Вы уверены что хотите начать игру заново и сбросить результаты?`;
 
 const updateGameStateCb = () => {
-  gameData.setCurrentLevelAnswer(isAnswered(), isAnswerCorrect());
+  gameData.setCurrentLevelAnswer(isAnswered(), isAnswerCorrect(gameData));
   gameData.increaseLevel();
   if (gameData.isGameFinished()) {
-    goStatistics();
     clearTimeout(timerID);
+    goStatistics();
   } else {
     run(CONTINUE_STARTED_GAME);
   }
 };
 
 const confirmNewUserPlayingCb = () => {
-  if (!shouldContinueWithCurrentGame) {   // Need a check to cancel current score
+  if (isAnsweredYes(CONFIRMATION_TEXT)) {
     goBeginWindow();
   }
 };
@@ -38,13 +32,13 @@ const confirmNewUserPlayingCb = () => {
 const run = (continueTheGame) => {
   if (!continueTheGame) {
     gameData.init(gameQuestions, updateGameStateCb);
-    timerID = setInterval(gameData.timeTick.bind(gameData), SECONDS_TICK * 1000);
+    timerID = setInterval(gameData.tickSecond.bind(gameData), MILLISECONDS_TICK);
   }
   gameData.cb(gameData.currentQuestion, gameData, confirmNewUserPlayingCb, updateGameStateCb);
 };
 
 
-// Initializations
+// Initializations0
 
 const gameQuestions = getQuestions(QUESTIONS_IS_NOT_SHAFFLED);
 const gameData = GameData;
