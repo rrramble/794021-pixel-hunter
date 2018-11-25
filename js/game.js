@@ -1,10 +1,10 @@
-// Экран управляющий игрой
+// Game controller window
 
 import getQuestions from './data/mock-questions.js';
 import game1image from './game-1-window.js';
 import game2images from './game-2-window.js';
 import game3images from './game-3-window.js';
-import goBegin from './greeting-window.js';
+import goBeginWindow from './greeting-window.js';
 import goStatistics from './stats-window';
 import {getLevelWithResult} from './game-utils.js';
 
@@ -15,34 +15,38 @@ const SAME_SERIES_SET = true;
 
 const GameTypes = {
   '1': {
-    gameCb: game1image,
+    GAME_CB: game1image,
   },
   '2': {
-    gameCb: game2images,
+    GAME_CB: game2images,
   },
   '3': {
-    gameCb: game3images,
+    GAME_CB: game3images,
   },
 };
 
-const questions = getQuestions(QUESTIONS_IS_NOT_SHAFFLED);
 let gameState;
 
-const initializeGameState = () => {
+
+// Functions
+
+const initializeGameState = (questions) => {
   const levels = questions.map((question) => {
     return {
       secondsLeft: MAX_ANSWER_TIME,
       question,
     };
   });
-  gameState = {
+  const state = {
+    MAX_LIVES,
     currentLevel: 0,
     restLives: MAX_LIVES,
     levels,
   };
+  return state;
 };
 
-const updateGameState = () => {
+const updateGameStateCb = () => {
   const level = gameState.levels[gameState.currentLevel];
   gameState.levels[gameState.currentLevel] = getLevelWithResult(level);
   if (++gameState.currentLevel < gameState.levels.length) {
@@ -52,20 +56,23 @@ const updateGameState = () => {
   }
 };
 
-const playFromStart = () => {
-  initializeGameState();
-  goBegin();
+const confirmNewUserPlayingCb = () => {
+  if (!shouldContinueWithCurrentGame) {   // Need a check to cancel current score
+    goBeginWindow();
+  }
 };
-
-initializeGameState();
 
 const run = (isTheSameSeriesSet) => {
   if (!isTheSameSeriesSet) {
-    gameState.currentLevel = 0;
+    gameState = initializeGameState(gameQuestions);
   }
   const question = gameState.levels[gameState.currentLevel].question;
-  const gameCb = GameTypes[question.length].gameCb;
-  gameCb(question, gameState, playFromStart, updateGameState);
+  const gameCb = GameTypes[question.length].GAME_CB;
+  gameCb(question, gameState, confirmNewUserPlayingCb, updateGameStateCb);
 };
 
+
+// Initialization
+
+const gameQuestions = getQuestions(QUESTIONS_IS_NOT_SHAFFLED);
 export default run;

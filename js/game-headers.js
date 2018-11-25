@@ -1,5 +1,3 @@
-// REMOVE magic number 3!!!!!!!!!!!!!!!
-
 import {getFittedSize} from './utils';
 import {getFooterScoreIconClassNames} from './game-utils.js';
 
@@ -34,7 +32,7 @@ export const getGameHeader = (gameState) => {
       </button>
       <div class="game__timer">${seconds}</div>
       <div class="game__lives">
-      ${new Array(3 - restLives)
+      ${new Array(gameState.MAX_LIVES - restLives)
         .fill(`<img src="img/heart__empty.svg" class="game__heart" alt="Life" width="31" height="27">`)
         .join(``)}
       ${new Array(restLives)
