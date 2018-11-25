@@ -1,58 +1,31 @@
 // Game controller window
 
 import getQuestions from './data/mock-questions.js';
-import game1image from './game-1-window.js';
-import game2images from './game-2-window.js';
-import game3images from './game-3-window.js';
 import goBeginWindow from './greeting-window.js';
 import goStatistics from './stats-window';
 import {getLevelWithResult} from './game-utils.js';
+import GameData from './game-data.js';
 
 const QUESTIONS_IS_NOT_SHAFFLED = true;
-const MAX_LIVES = 3;
-const MAX_ANSWER_TIME = 30;
-const SAME_SERIES_SET = true;
+const CONTINUE_STARTED_GAME = true;
+const SECONDS_TICK = 1;
 
-const GameTypes = {
-  '1': {
-    GAME_CB: game1image,
-  },
-  '2': {
-    GAME_CB: game2images,
-  },
-  '3': {
-    GAME_CB: game3images,
-  },
-};
+const isAnswered = () => {
+  return Math.random() < 0.85; // Mock result
+}
 
-let gameState;
-
-
-// Functions
-
-const initializeGameState = (questions) => {
-  const levels = questions.map((question) => {
-    return {
-      secondsLeft: MAX_ANSWER_TIME,
-      question,
-    };
-  });
-  const state = {
-    MAX_LIVES,
-    currentLevel: 0,
-    restLives: MAX_LIVES,
-    levels,
-  };
-  return state;
-};
+const isAnswerCorrect = () => {
+  return Math.random() < 0.85; // Mock result
+}
 
 const updateGameStateCb = () => {
-  const level = gameState.levels[gameState.currentLevel];
-  gameState.levels[gameState.currentLevel] = getLevelWithResult(level);
-  if (++gameState.currentLevel < gameState.levels.length) {
-    run(SAME_SERIES_SET);
-  } else {
+  gameData.setCurrentLevelAnswer(isAnswered(), isAnswerCorrect());
+  gameData.increaseLevel();
+  if (gameData.isGameFinished()) {
     goStatistics();
+    clearTimeout(timerID);
+  } else {
+    run(CONTINUE_STARTED_GAME);
   }
 };
 
@@ -62,17 +35,19 @@ const confirmNewUserPlayingCb = () => {
   }
 };
 
-const run = (isTheSameSeriesSet) => {
-  if (!isTheSameSeriesSet) {
-    gameState = initializeGameState(gameQuestions);
+const run = (continueTheGame) => {
+  if (!continueTheGame) {
+    gameData.init(gameQuestions, updateGameStateCb);
+    timerID = setInterval(gameData.timeTick.bind(gameData), SECONDS_TICK * 1000);
   }
-  const question = gameState.levels[gameState.currentLevel].question;
-  const gameCb = GameTypes[question.length].GAME_CB;
-  gameCb(question, gameState, confirmNewUserPlayingCb, updateGameStateCb);
+  gameData.cb(gameData.currentQuestion, gameData, confirmNewUserPlayingCb, updateGameStateCb);
 };
 
 
-// Initialization
+// Initializations
 
 const gameQuestions = getQuestions(QUESTIONS_IS_NOT_SHAFFLED);
+const gameData = GameData;
+let timerID;
+
 export default run;

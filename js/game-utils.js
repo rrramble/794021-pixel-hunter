@@ -68,10 +68,10 @@ export const renderNode = (node, shouldPreviousWindowBeSaved) => {
   showWindow(node);
 };
 
-export const getFooterScoreIconClassNames = (gameState) => {
-  return gameState.levels.map((level, index) => {
+export const getFooterScoreIconClassNames = (gameData) => {
+  return gameData.levels.map((level, index) => {
     switch (true) {
-      case (index >= gameState.currentLevel || !level.isAnswered):
+      case (index >= gameData.currentLevelNumber || !level.isAnswered):
         return IconClassName.NOT_ANSWERED;
       case (!level.isAnswerCorrect):
         return IconClassName.NOT_CORRECT;

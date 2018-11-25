@@ -16,9 +16,9 @@ const ImageSize = {
   }
 };
 
-export const getGameHeader = (gameState) => {
-  const seconds = gameState.levels[gameState.currentLevel].secondsLeft;
-  const restLives = gameState.restLives;
+export const getGameHeader = (gameData) => {
+  const seconds = gameData.currentQuestionSecondsLeft;
+  const restLives = gameData.restLives;
   return `
     <header class="header">
       <button class="back">
@@ -32,7 +32,7 @@ export const getGameHeader = (gameState) => {
       </button>
       <div class="game__timer">${seconds}</div>
       <div class="game__lives">
-      ${new Array(gameState.MAX_LIVES - restLives)
+      ${new Array(gameData.MAX_LIVES - restLives)
         .fill(`<img src="img/heart__empty.svg" class="game__heart" alt="Life" width="31" height="27">`)
         .join(``)}
       ${new Array(restLives)
@@ -43,18 +43,18 @@ export const getGameHeader = (gameState) => {
   `;
 };
 
-const getGameFooterGameScore = (gameState) => {
+const getGameFooter = (gameData) => {
   return `
     <ul class="stats">
-      ${getFooterScoreIconClassNames(gameState).map((className) => `
+      ${getFooterScoreIconClassNames(gameData).map((className) => `
         <li class="stats__result ${className}"></li>
       `).join(``)}
     </ul>
   `;
 };
 
-export const getGameField1 = (gameState) => {
-  const image = getFittedImages(gameState)[0];
+export const getGameField1 = (gameData) => {
+  const image = getFittedImages(gameData)[0];
   return `
   <section class="game">
     <p class="game__task">Угадай, фото или рисунок?</p>
@@ -71,13 +71,13 @@ export const getGameField1 = (gameState) => {
         </label>
       </div>
     </form>
-    ${getGameFooterGameScore(gameState)}
+    ${getGameFooter(gameData)}
   </section>
 `;
 };
 
-export const getGameField2 = (gameState) => {
-  const images = getFittedImages(gameState);
+export const getGameField2 = (gameData) => {
+  const images = getFittedImages(gameData);
   return `
   <section class="game">
     <p class="game__task">Угадайте для каждого изображения фото или рисунок?</p>
@@ -97,13 +97,13 @@ export const getGameField2 = (gameState) => {
         </div>
       `).join(``)}
     </form>
-    ${getGameFooterGameScore(gameState)}
+    ${getGameFooter(gameData)}
   </section>
 `;
 };
 
-export const getGameField3 = (gameState) => {
-  const images = getFittedImages(gameState);
+export const getGameField3 = (gameData) => {
+  const images = getFittedImages(gameData);
   return `
   <section class="game">
     <p class="game__task">Найдите рисунок среди изображений</p>
@@ -114,25 +114,25 @@ export const getGameField3 = (gameState) => {
         </div>
       `).join(``)}
     </form>
-    ${getGameFooterGameScore(gameState)}
+    ${getGameFooter(gameData)}
   </section>
 `;
 };
 
-export const getGameField = (gameState, questionCount) => {
+export const getGameField = (gameData, questionCount) => {
   switch (questionCount) {
     case 1:
-      return getGameField1(gameState);
+      return getGameField1(gameData);
     case 2:
-      return getGameField2(gameState);
+      return getGameField2(gameData);
     case 3:
-      return getGameField3(gameState);
+      return getGameField3(gameData);
   }
   return new Error(`No such question count in this game.`);
 };
 
-const getFittedImages = (gameState) => {
-  const question = gameState.levels[gameState.currentLevel].question;
+const getFittedImages = (gameData) => {
+  const question = gameData.currentQuestion;
   const borderSize = {
     width: ImageSize[question.length].WIDTH,
     height: ImageSize[question.length].HEIGHT
