@@ -4,7 +4,6 @@ import GameWindow from './game-window.js';
 import {changeWindow, getCountInputsChecked} from './utils.js';
 import {getGameHeader, getGameField} from './game-headers.js';
 
-const ANSWERS_COUNT = 2;
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
 const ANSWERS_FORM_SELECTOR = `.game__content`;
 const INPUTS_SELECTOR = `.game__content .game__option input`;
