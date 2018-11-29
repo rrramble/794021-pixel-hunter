@@ -1,5 +1,3 @@
-import {deleteCurrentWindow, showWindow} from './utils.js';
-
 const QUESTONS_COUNT = 10;
 
 const PointsForAnswer = {
@@ -61,13 +59,6 @@ export const getTimeLeft = (timeLimit, timeElapsed) => {
   return timeLimit > timeElapsed ? timeLimit - timeElapsed : 0;
 };
 
-export const renderNode = (node, shouldPreviousWindowBeSaved) => {
-  if (!shouldPreviousWindowBeSaved) {
-    deleteCurrentWindow();
-  }
-  showWindow(node);
-};
-
 export const getFooterScoreIconClassNames = (gameData) => {
   return gameData.levels.map((level, index) => {
     switch (true) {
@@ -75,9 +66,9 @@ export const getFooterScoreIconClassNames = (gameData) => {
         return IconClassName.NOT_ANSWERED;
       case (!level.isAnswerCorrect):
         return IconClassName.NOT_CORRECT;
-      case (level.isAnswerSlow):
+      case (level.isAnswerSlow()):
         return IconClassName.CORRECT_SLOW;
-      case (level.isAnswerQuick):
+      case (level.isAnswerQuick()):
         return IconClassName.CORRECT_QUICK;
       default:
         return IconClassName.CORRECT;
@@ -86,7 +77,7 @@ export const getFooterScoreIconClassNames = (gameData) => {
 };
 
 export const isAnswered = () => {
-  return Math.random() < 0.85; // !!! Mock result
+  return true; // !!! Mock result
 };
 
 export const isAnswerCorrect = () => {

@@ -9,28 +9,23 @@ const getMainNode = () => {
   return mainNode;
 };
 
-const makeDomNodeFromText = (text) => {
+export const makeDomNode = (innerHtml, eventListeners) => {
   const node = document.createElement(`div`);
-  node.innerHTML = text;
+  node.innerHTML = innerHtml;
+  eventListeners.forEach((el) => {
+    const subNode = node.querySelector(el.selector);
+    subNode.addEventListener(el.type, el.cb);
+  });
   return node;
 };
 
-export const deleteCurrentWindow = () => {
-  for (let i = getMainNode().children.length; i--;) {
-    getMainNode().children[i].remove();
-  }
-};
-
-export const showWindow = (node) => {
-  getMainNode().append(node);
-};
-
-export const changeWindow = (innerHtml, shouldPreviousWindowBeSaved) => {
+export const changeWindow = (node, shouldPreviousWindowBeSaved) => {
   if (!shouldPreviousWindowBeSaved) {
-    deleteCurrentWindow();
+    for (let i = getMainNode().children.length; i--;) {
+      getMainNode().children[i].remove();
+    }
   }
-  const node = makeDomNodeFromText(innerHtml);
-  showWindow(node);
+  getMainNode().append(node);
 };
 
 export const enableFormInput = (domNode, shouldBeEnabled) => {

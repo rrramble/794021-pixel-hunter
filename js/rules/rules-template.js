@@ -1,16 +1,13 @@
 // Экран 'Правила игры'
 
-import AbstractWindow from './abstract-window.js';
-import {changeWindow, enableFormInput} from './utils.js';
-import backWindow from './greeting-window.js';
-import nextWindow from './game.js';
+import {makeDomNode} from '../utils.js';
 
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
 const NAME_INPUT_SELECTOR = `.rules__input`;
 const SEND_BUTTON_SELECTOR = `.rules__button`;
 
-const data = {
-  innerHtml: `
+const getTemplate = () => {
+  return `
     <header class="header">
       <button class="back">
         <span class="visually-hidden">Вернуться к началу</span>
@@ -38,35 +35,25 @@ const data = {
         <button class="rules__button  continue" type="submit" disabled>Go!</button>
       </form>
     </section>
-  `
+  `;
 };
 
-let sendButtonNode;
+const getTemplateNode = (cbs) => {
+  const eventListeners = [{
+    selector: PREVIOUS_BUTTON_SELECTOR,
+    type: `click`,
+    cb: cbs[0],
+  }, {
+    selector: NAME_INPUT_SELECTOR,
+    type: `keyup`,
+    cb: cbs[1],
+  }, {
+    selector: SEND_BUTTON_SELECTOR,
+    type: `click`,
+    cb: cbs[2],
+  }];
 
-const verifyName = (evt) => {
-  if (!sendButtonNode) {
-    sendButtonNode = document.querySelector(SEND_BUTTON_SELECTOR);
-  }
-  enableFormInput(sendButtonNode, isInputNameValid(evt.srcElement));
+  return makeDomNode(getTemplate(), eventListeners);
 };
 
-const sendForm = (evt) => {
-  evt.preventDefault();
-  sendButtonNode = undefined;
-  nextWindow();
-};
-
-const isInputNameValid = (inputNode) => {
-  return !!inputNode.value;
-};
-
-const run = () => {
-  const thisWindow = new AbstractWindow([data.innerHtml]);
-  thisWindow.pushEventListeners(PREVIOUS_BUTTON_SELECTOR, `click`, backWindow);
-  thisWindow.pushEventListeners(NAME_INPUT_SELECTOR, `keyup`, verifyName);
-  thisWindow.pushEventListeners(SEND_BUTTON_SELECTOR, `click`, sendForm);
-  thisWindow.setRenderFunction(changeWindow);
-  return thisWindow.run();
-};
-
-export default run;
+export default getTemplateNode;

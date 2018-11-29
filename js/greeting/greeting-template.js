@@ -1,12 +1,11 @@
-// Экран 'Приветствие'
+// Шаблон для экрана 'Приветствие' (Greeting window)
 
-import AbstractWindow from './abstract-window.js';
-import {changeWindow} from './utils.js';
-import nextWindow from './rules-window.js';
+import {makeDomNode} from '../utils.js';
 
 const NEXT_BUTTON_SELECTOR = `.greeting__continue`;
-const data = {
-  innerHtml: `
+
+const getTemplate = () => {
+  return `
     <section class="greeting central--blur">
       <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
       <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>
@@ -27,14 +26,17 @@ const data = {
         </svg>
       </button>
     </section>
-  `
+  `;
 };
 
-const run = () => {
-  const thisWindow = new AbstractWindow([data.innerHtml]);
-  thisWindow.pushEventListeners(NEXT_BUTTON_SELECTOR, `click`, nextWindow);
-  thisWindow.setRenderFunction(changeWindow);
-  return thisWindow.run();
+const getTemplateNode = (nextWindowCb) => {
+  const eventListeners = [{
+    selector: NEXT_BUTTON_SELECTOR,
+    type: `click`,
+    cb: nextWindowCb,
+  }];
+
+  return makeDomNode(getTemplate(), eventListeners);
 };
 
-export default run;
+export default getTemplateNode;

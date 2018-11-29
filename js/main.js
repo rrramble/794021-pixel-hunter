@@ -1,3 +1,3 @@
-import nextWindow from './game.js';
+import nextWindow from './intro/intro-window.js';
 
 nextWindow();

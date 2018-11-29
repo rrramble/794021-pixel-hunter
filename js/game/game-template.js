@@ -1,23 +1,38 @@
-import {getFittedSize} from './utils';
 import {getFooterScoreIconClassNames} from './game-utils.js';
 
-const ImageSize = {
+import {getFittedSize} from '../utils';
+
+const PREVIOUS_BUTTON_SELECTOR = `.back`;
+
+const PlaygroundType = {
   '1': {
-    WIDTH: 705,
-    HEIGHT: 455,
+    HTML_SELECTOR: `.game__option input`,
+    EVENT_TYPE: `click`,
+    ImageSize: {
+      WIDTH: 705,
+      HEIGHT: 455,
+    },
   },
   '2': {
-    WIDTH: 468,
-    HEIGHT: 458,
+    HTML_SELECTOR: `.game__option input`,
+    EVENT_TYPE: `click`,
+    ImageSize: {
+      WIDTH: 468,
+      HEIGHT: 458,
+    },
   },
   '3': {
-    WIDTH: 304,
-    HEIGHT: 455,
-  }
+    HTML_SELECTOR: `.game__content--triple img`,
+    EVENT_TYPE: `click`,
+    ImageSize: {
+      WIDTH: 304,
+      HEIGHT: 455,
+    },
+  },
 };
 
-export const getGameHeader = (gameData) => {
-  const seconds = gameData.currentQuestionSecondsLeft;
+const getGameHeader = (gameData) => {
+  const secondsLeft = gameData.currentQuestionSecondsLeft;
   const restLives = gameData.restLives;
   return `
     <header class="header">
@@ -30,7 +45,7 @@ export const getGameHeader = (gameData) => {
           <use xlink:href="img/sprite.svg#logo-small"></use>
         </svg>
       </button>
-      <div class="game__timer">${seconds}</div>
+      <div class="game__timer">${secondsLeft}</div>
       <div class="game__lives">
       ${new Array(gameData.MAX_LIVES - restLives)
         .fill(`<img src="img/heart__empty.svg" class="game__heart" alt="Life" width="31" height="27">`)
@@ -43,6 +58,15 @@ export const getGameHeader = (gameData) => {
   `;
 };
 
+export const getGameHeaderNode = (gameData, cb) => {
+  const node = document.createElement(`div`);
+  node.innerHTML = getGameHeader(gameData);
+
+  const subnode = node.querySelector(PREVIOUS_BUTTON_SELECTOR);
+  subnode.addEventListener(`click`, cb);
+  return node;
+};
+
 const getGameFooter = (gameData) => {
   return `
     <ul class="stats">
@@ -53,7 +77,7 @@ const getGameFooter = (gameData) => {
   `;
 };
 
-export const getGameField1 = (gameData) => {
+const getGameField1 = (gameData) => {
   const image = getFittedImages(gameData)[0];
   return `
   <section class="game">
@@ -76,7 +100,7 @@ export const getGameField1 = (gameData) => {
 `;
 };
 
-export const getGameField2 = (gameData) => {
+const getGameField2 = (gameData) => {
   const images = getFittedImages(gameData);
   return `
   <section class="game">
@@ -119,25 +143,36 @@ export const getGameField3 = (gameData) => {
 `;
 };
 
-export const getGameField = (gameData) => {
+export const getGameFieldNode = (gameData, userInputCb) => {
+  const settings = PlaygroundType[gameData.currentQuestionImageCount];
+
+  const node = document.createElement(`div`);
+  let getTemplateCb;
   switch (gameData.currentQuestionImageCount) {
     case 1:
-      return getGameField1(gameData);
+      getTemplateCb = getGameField1;
+      break;
     case 2:
-      return getGameField2(gameData);
+      getTemplateCb = getGameField2;
+      break;
     case 3:
-      return getGameField3(gameData);
+      getTemplateCb = getGameField3;
   }
-  return new Error(`No such question count in this game.`);
+  node.innerHTML = getTemplateCb(gameData);
+
+  const inputs = node.querySelectorAll(settings.HTML_SELECTOR);
+  for (const input of inputs) {
+    input.addEventListener(settings.EVENT_TYPE, userInputCb);
+  }
+  return node;
 };
 
 const getFittedImages = (gameData) => {
-  const question = gameData.currentQuestion;
   const borderSize = {
-    width: ImageSize[question.length].WIDTH,
-    height: ImageSize[question.length].HEIGHT
+    width: PlaygroundType[gameData.currentQuestionImageCount].ImageSize.WIDTH,
+    height: PlaygroundType[gameData.currentQuestionImageCount].ImageSize.HEIGHT
   };
-  const images = question.map((image) => {
+  const images = gameData.currentQuestion.map((image) => {
     const fittedSize = getFittedSize(
         borderSize,
         {width: image.width, height: image.height}
