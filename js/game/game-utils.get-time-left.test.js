@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {getTimeLeft as testedFunction} from '../game-utils.js';
+import {getTimeLeft as testedFunction} from './game-utils.js';
 
 const set1 = {
   value: {
