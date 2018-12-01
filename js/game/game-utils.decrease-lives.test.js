@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {decreaseLives as testedFunction} from '../game-utils.js';
+import {decreaseLives as testedFunction} from './game-utils.js';
 
 const set1 = {
   value: {
