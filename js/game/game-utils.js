@@ -1,5 +1,5 @@
 const QUESTONS_COUNT = 10;
-const ANSWER_FORM_SELECTOR = '.game__answer input';
+const ANSWER_INPUT_SELECTOR = '.game__answer input';
 
 const PointsForAnswer = {
   CORRECT: 100,
@@ -84,7 +84,7 @@ export const isAnsweredFully = (gameData) => {
   if (gameData.currentQuestionImageCount === getCheckedInputsCount()) {
     return true;
   }
-  return false; // !!! Mock result
+  return false;
 };
 
 export const isAnswerCorrect = () => {
@@ -92,7 +92,7 @@ export const isAnswerCorrect = () => {
 };
 
 const getCheckedInputsCount = () => {
-  const nodes = document.querySelectorAll(ANSWER_FORM_SELECTOR);
+  const nodes = document.querySelectorAll(ANSWER_INPUT_SELECTOR);
   return [...nodes].reduce((accu, node) => {
     return node.checked ? ++accu : accu;
   }, 0);
