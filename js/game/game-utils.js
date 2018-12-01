@@ -88,7 +88,7 @@ export const isAnsweredFully = (gameData) => {
 };
 
 export const isAnswerCorrect = () => {
-  return Math.random() < 0.5; // !!! Mock answer result
+  return Math.random() < 0.7; // !!! Mock answer result
 };
 
 const getCheckedInputsCount = () => {
