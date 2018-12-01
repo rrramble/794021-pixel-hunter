@@ -1,7 +1,11 @@
 // Game controller window
 
 const MAX_LIVES = 3;
-const MAX_ANSWER_TIME = 1;
+const UNANSWERED_QUESTIONS_SCORE = -1;
+const MAX_ANSWER_TIME = 30;
+const SECONDS_LEFT_OF_QUICK_ANSWER = 20;
+const SECONDS_LEFT_OF_SLOW_ANSWER = 10;
+
 const Points = {
   ADDITIONAL_FOR_QUICK_ANSWER: 50,
   ADDITIONAL_FOR_SLOW_ANSWER: -50,
@@ -23,11 +27,11 @@ class Level {
   }
 
   isAnswerQuick() {
-    return this.isAnswerCorrect && this.secondsLeft > 20;
+    return this.isAnswerCorrect && this.secondsLeft > SECONDS_LEFT_OF_QUICK_ANSWER;
   }
 
   isAnswerSlow() {
-    return this.isAnswerCorrect && this.secondsLeft < 10;
+    return this.isAnswerCorrect && this.secondsLeft < SECONDS_LEFT_OF_SLOW_ANSWER;
   }
 
   get score() {
@@ -48,7 +52,10 @@ class Level {
   }
 
   tickSecond() {
-    return --this._secondsLeft;
+    if (this._secondsLeft >= 0) {
+      return --this._secondsLeft;
+    }
+    return 0;
   }
 
   get question() {
@@ -93,6 +100,13 @@ class GameData {
     return this.currentLevel.secondsLeft;
   }
 
+  decreaseLive() {
+    if (this._state.restLives > 0) {
+      --this._state.restLives;
+    }
+    return this._state.restLives;
+  }
+
   increaseLevel() {
     return ++this._state.currentLevelNumber;
   }
@@ -115,7 +129,8 @@ class GameData {
   }
 
   isGameFinished() {
-    return this.currentLevelNumber >= this.levels.length;
+    return this.currentLevelNumber >= this.levels.length ||
+      this.restLives <= 0;
   }
 
   get levels() {
@@ -166,7 +181,7 @@ class GameData {
 
   get score() {
     if (this.isThereUnansweredQuestion()) {
-      return -1;
+      return UNANSWERED_QUESTIONS_SCORE;
     }
     return this.answersScore +
       this.quickAnswersScore +
@@ -175,9 +190,12 @@ class GameData {
       this.restLivesScore;
   }
 
-  setCurrentLevelAnswer(isAnswered, isAnswerCorrect) {
-    this.currentLevel.isAnswered = isAnswered;
+  setCurrentLevelAnswer(isAnswerCorrect) {
+    this.currentLevel.isAnswered = true;
     this.currentLevel.isAnswerCorrect = isAnswerCorrect;
+    if (!isAnswerCorrect) {
+      this.decreaseLive();
+    }
   }
 
   get slowAnswersCount() {

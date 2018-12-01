@@ -1,4 +1,5 @@
 const QUESTONS_COUNT = 10;
+const ANSWER_FORM_SELECTOR = '.game__answer input';
 
 const PointsForAnswer = {
   CORRECT: 100,
@@ -76,11 +77,23 @@ export const getFooterScoreIconClassNames = (gameData) => {
   });
 };
 
-export const isAnswered = () => {
-  return true; // !!! Mock result
+export const isAnsweredFully = (gameData) => {
+  if (gameData.currentQuestionImageCount === 3) {
+    return true;
+  }
+  if (gameData.currentQuestionImageCount === getCheckedInputsCount()) {
+    return true;
+  }
+  return false; // !!! Mock result
 };
 
 export const isAnswerCorrect = () => {
-  return Math.random() < 0.85; // !!! Mock result
+  return Math.random() < 0.5; // !!! Mock answer result
 };
 
+const getCheckedInputsCount = () => {
+  const nodes = document.querySelectorAll(ANSWER_FORM_SELECTOR);
+  return [...nodes].reduce((accu, node) => {
+    return node.checked ? ++accu : accu;
+  }, 0);
+}

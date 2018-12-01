@@ -1,6 +1,6 @@
 import {getFooterScoreIconClassNames} from './game-utils.js';
 
-import {getFittedSize} from '../utils';
+import {getFittedSize, makeArray} from '../utils';
 
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
 
@@ -50,7 +50,7 @@ const getGameHeader = (gameData) => {
       ${new Array(gameData.MAX_LIVES - restLives)
         .fill(`<img src="img/heart__empty.svg" class="game__heart" alt="Life" width="31" height="27">`)
         .join(``)}
-      ${new Array(restLives)
+      ${makeArray(restLives)
         .fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">`)
         .join(``)}
       </div>

@@ -2,8 +2,8 @@
 
 import GameData from './game-data.js';
 import gameWindow from './game-window.js';
-import {isAnswered, isAnswerCorrect} from './game-utils.js';
 
+import {isAnsweredFully, isAnswerCorrect} from './game-utils.js';
 import getQuestions from '../data/mock-questions.js';
 import goBeginWindow from '../greeting/greeting-window.js';
 import goStatistics from '../stats/stats-window';
@@ -25,11 +25,16 @@ const confirmCancellingGame = () => {
 };
 
 const updateGameState = () => {
-  gameData.setCurrentLevelAnswer(isAnswered(), isAnswerCorrect(gameData));
-  gameData.increaseLevel();
+  if (!isAnsweredFully(gameData)) {
+    return;
+  }
+
   clearTimeout(timerID);
+  gameData.setCurrentLevelAnswer(isAnswerCorrect(gameData));
+  gameData.increaseLevel();
   if (gameData.isGameFinished()) {
     goStatistics(gameData);
+    return;
   } else {
     run(CONTINUE_STARTED_GAME);
   }
