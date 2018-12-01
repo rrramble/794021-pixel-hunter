@@ -64,6 +64,13 @@ export const getFittedSize = (borderSize, imageSize) => {
   };
 };
 
+export const makeArray = (count) => {
+  if (count <= 0) {
+    return [];
+  }
+  return new Array(count);
+}
+
 export const isAnsweredYes = (text) => {
   /*
     const KEY_ESC = 27;
