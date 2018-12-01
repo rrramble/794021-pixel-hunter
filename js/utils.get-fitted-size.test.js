@@ -50,31 +50,3 @@ createTestForFrame({width: 256, height: 128});
 createTestForFrame({width: 468, height: 458});
 createTestForFrame({width: 705, height: 455});
 createTestForFrame({width: 304, height: 455});
-
-
-/*
-const set1 = {
-  value: {
-    timeLimit: 1000,
-    timeElapsed: 700
-  },
-  expectedResult: 300
-};
-
-describe(`game-utils.js: getTimeLeft()`, () => {
-  describe(`Normal case data`, () => {
-    it(`tests set1`, () => {
-      assert.strictEqual(testedFunction(set1.value.timeLimit, set1.value.timeElapsed), set1.expectedResult);
-    });
-  });
-
-  describe(`Corner case data`, () => {
-    it(`tests set2`, () => {
-      assert.strictEqual(testedFunction(set2.value.timeLimit, set2.value.timeElapsed), set2.expectedResult);
-    });
-    it(`tests set3`, () => {
-      assert.strictEqual(testedFunction(set3.value.timeLimit, set3.value.timeElapsed), set3.expectedResult);
-    });
-  });
-});
-*/
