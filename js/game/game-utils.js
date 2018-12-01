@@ -1,5 +1,5 @@
 const QUESTONS_COUNT = 10;
-const ANSWER_INPUT_SELECTOR = '.game__answer input';
+const ANSWER_INPUT_SELECTOR = `.game__answer input`;
 
 const PointsForAnswer = {
   CORRECT: 100,
@@ -96,4 +96,4 @@ const getCheckedInputsCount = () => {
   return [...nodes].reduce((accu, node) => {
     return node.checked ? ++accu : accu;
   }, 0);
-}
+};

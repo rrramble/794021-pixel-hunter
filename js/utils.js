@@ -69,7 +69,7 @@ export const makeArray = (count) => {
     return [];
   }
   return new Array(count);
-}
+};
 
 export const isAnsweredYes = (text) => {
   /*
