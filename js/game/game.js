@@ -12,23 +12,20 @@ import {isAnsweredYes} from '../utils.js';
 const QUESTIONS_IS_NOT_SHAFFLED = true;
 const CONTINUE_STARTED_GAME = true;
 const MILLISECONDS_TICK = 1000;
-const CONFIRMATION_TEXT = `Вы уверены что хотите начать игру заново и сбросить результаты?`;
+const GAME_CANCELLING_CONFIRMATION_TEXT = `Вы уверены что хотите начать игру заново и сбросить результаты?`;
+
 const gameQuestions = getQuestions(QUESTIONS_IS_NOT_SHAFFLED);
 const gameData = GameData;
 let timerID;
 
 const confirmCancellingGame = () => {
-  if (isAnsweredYes(CONFIRMATION_TEXT)) {
+  if (isAnsweredYes(GAME_CANCELLING_CONFIRMATION_TEXT)) {
     clearTimeout(timerID);
     goBeginWindow();
   }
 };
 
-const updateGameState = (evt) => {
-  if (!isAnsweredFully(gameData)) {
-    return;
-  }
-
+const processAnswer = (evt) => {
   clearTimeout(timerID);
   gameData.setCurrentLevelAnswer(getAnswers(evt, gameData.currentQuestionImageCount));
   gameData.increaseLevel();
@@ -42,10 +39,10 @@ const updateGameState = (evt) => {
 
 const run = (isToBeContinued) => {
   if (!isToBeContinued) {
-    gameData.init(gameQuestions, updateGameState);
+    gameData.init(gameQuestions, processAnswer);
   }
   timerID = setInterval(gameData.tickSecond.bind(gameData), MILLISECONDS_TICK);
-  gameWindow(gameData, confirmCancellingGame, updateGameState);
+  gameWindow(gameData, confirmCancellingGame, processAnswer);
 };
 
 export default run;

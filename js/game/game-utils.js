@@ -91,12 +91,18 @@ export const isAnsweredFully = (gameData) => {
 
 export const getAnswers = (evt, imagesCount) => {
   if (imagesCount === 3) {
+    if (!evt) {
+      return false;
+    }
     let images = [false, false, false];
     const index = parseInt(evt.srcElement.id, 10);
     images[index] = true;
     return images;
   }
   const checkedNodes = document.querySelectorAll(CHECKED_ANSWERS_INPUT_SELECTOR);
+  if (checkedNodes.length <= 0) {
+    return undefined;
+  }
   return [...checkedNodes].map((checkedNode) => {
     return isImageTypePhoto(checkedNode.value);
   });
