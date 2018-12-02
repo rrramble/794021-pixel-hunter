@@ -15,12 +15,12 @@ const verifyPlayFromStart = () => {
   playFromStartCb();
 };
 
-const verifyUserClick = () => {
+const verifyUserClick = (evt) => {
   const inputNodes = [...document.querySelectorAll(INPUTS_SELECTOR)];
   if (
     (inputNodes.length && isAllInputsSelected(inputNodes)) ||
     !inputNodes.length) {
-    updateGameStateCb();
+    updateGameStateCb(evt);
   }
 };
 

@@ -134,7 +134,7 @@ export const getGameField3 = (gameData) => {
     <form class="game__content  game__content--triple">
       ${images.map((image, index) => `
         <div class="game__option">
-          <img src="${image.url}" alt="Option ${index + 1}" width="${image.width}" height="${image.height}">
+          <img id="${index}" src="${image.url}" alt="Option ${index + 1}" width="${image.width}" height="${image.height}">
         </div>
       `).join(``)}
     </form>

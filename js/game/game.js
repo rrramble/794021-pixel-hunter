@@ -3,7 +3,7 @@
 import GameData from './game-data.js';
 import gameWindow from './game-window.js';
 
-import {isAnsweredFully, isAnswerCorrect} from './game-utils.js';
+import {isAnsweredFully, getAnswers} from './game-utils.js';
 import getQuestions from '../data/mock-questions.js';
 import goBeginWindow from '../greeting/greeting-window.js';
 import goStatistics from '../stats/stats-window';
@@ -24,13 +24,13 @@ const confirmCancellingGame = () => {
   }
 };
 
-const updateGameState = () => {
+const updateGameState = (evt) => {
   if (!isAnsweredFully(gameData)) {
     return;
   }
 
   clearTimeout(timerID);
-  gameData.setCurrentLevelAnswer(isAnswerCorrect(gameData));
+  gameData.setCurrentLevelAnswer(getAnswers(evt, gameData.currentQuestionImageCount));
   gameData.increaseLevel();
   if (gameData.isGameFinished()) {
     goStatistics(gameData);
