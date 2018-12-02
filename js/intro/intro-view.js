@@ -22,11 +22,11 @@ export default class IntroView extends AbstractView {
     `;
   }
 
-  render(nextWindowCb) {
+  render(cb) {
     const eventListeners = [{
       selector: EventListener.SELECTOR,
       type: EventListener.TYPE,
-      cb: nextWindowCb,
+      cb,
     }];
     return makeDomNode(this.template, eventListeners);
   };
