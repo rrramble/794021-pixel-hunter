@@ -116,3 +116,7 @@ const getCheckedInputsCount = () => {
   const checkedNodes = document.querySelectorAll(CHECKED_ANSWERS_INPUT_SELECTOR);
   return checkedNodes.length;
 };
+
+export const isUserNameValid = (name) => {
+  return !!name;
+};
