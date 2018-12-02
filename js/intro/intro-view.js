@@ -1,6 +1,6 @@
 // View class of 'Intro' window
 
-import AbstractView from '../utils/abstract-view.js'
+import AbstractView from '../utils/abstract-view.js';
 import {makeDomNode} from '../utils.js';
 
 const EventListener = {
@@ -29,6 +29,6 @@ export default class IntroView extends AbstractView {
       cb,
     }];
     return makeDomNode(this.template, eventListeners);
-  };
+  }
 
 }

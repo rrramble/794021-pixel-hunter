@@ -3,7 +3,7 @@
 import GameData from './game-data.js';
 import gameWindow from './game-window.js';
 
-import {isAnsweredFully, getAnswers} from './game-utils.js';
+import {getAnswers} from './game-utils.js';
 import getQuestions from '../data/mock-questions.js';
 import goBeginWindow from '../greeting/greeting.js';
 import goStatistics from '../stats/stats-window';
