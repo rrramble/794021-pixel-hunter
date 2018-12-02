@@ -5,7 +5,7 @@ import gameWindow from './game-window.js';
 
 import {isAnsweredFully, getAnswers} from './game-utils.js';
 import getQuestions from '../data/mock-questions.js';
-import goBeginWindow from '../greeting/greeting-window.js';
+import goBeginWindow from '../greeting/greeting.js';
 import goStatistics from '../stats/stats-window';
 import {isAnsweredYes} from '../utils.js';
 

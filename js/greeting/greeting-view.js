@@ -1,11 +1,20 @@
-// Шаблон для экрана 'Приветствие' (Greeting window)
+// View class of 'Intro' window
 
+import AbstractView from '../utils/abstract-view.js'
 import {makeDomNode} from '../utils.js';
 
-const NEXT_BUTTON_SELECTOR = `.greeting__continue`;
+const EventListener = {
+  SELECTOR: `.greeting__continue`,
+  TYPE: `click`,
+};
 
-const getTemplate = () => {
-  return `
+export default class GreetingView extends AbstractView {
+  constructor() {
+    super();
+  }
+
+  get template() {
+    return `
     <section class="greeting central--blur">
       <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
       <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>
@@ -26,17 +35,16 @@ const getTemplate = () => {
         </svg>
       </button>
     </section>
-  `;
-};
+    `;
+  }
 
-const getTemplateNode = (nextWindowCb) => {
-  const eventListeners = [{
-    selector: NEXT_BUTTON_SELECTOR,
-    type: `click`,
-    cb: nextWindowCb,
-  }];
+  render(cb) {
+    const eventListeners = [{
+      selector: EventListener.SELECTOR,
+      type: EventListener.TYPE,
+      cb,
+    }];
+    return makeDomNode(this.template, eventListeners);
+  };
 
-  return makeDomNode(getTemplate(), eventListeners);
-};
-
-export default getTemplateNode;
+}

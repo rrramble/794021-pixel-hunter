@@ -3,7 +3,7 @@
 import getTemplateNode from './rules-template.js';
 
 import AbstractWindow from '../abstract-window.js';
-import backWindowCb from '../greeting/greeting-window.js';
+import backWindowCb from '../greeting/greeting.js';
 import nextWindowCb from '../game/game.js';
 import {changeWindow as renderCb, enableFormInput} from '../utils.js';
 

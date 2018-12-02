@@ -2,7 +2,7 @@
 
 import {getTemplateHeaderNode, getTemplateFieldNode} from './stats-template.js';
 
-import backWindowCb from '../greeting/greeting-window.js';
+import backWindowCb from '../greeting/greeting.js';
 import AbstractWindow from '../abstract-window.js';
 import {changeWindow} from '../utils.js';
 

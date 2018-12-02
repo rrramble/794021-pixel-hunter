@@ -2,7 +2,7 @@
 
 import IntroView from './intro-view.js';
 import {changeWindow as renderCb} from '../utils.js';
-import nextWindowCb from '../greeting/greeting-window.js';
+import nextWindowCb from '../greeting/greeting.js';
 
 export default () => {
   const thisWindow = new IntroView();
