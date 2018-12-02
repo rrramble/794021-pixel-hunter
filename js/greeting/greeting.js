@@ -1,7 +1,7 @@
 // 'Greeting' window
 
 import View from './greeting-view.js';
-import nextWindowCb from '../rules/rules-window.js';
+import nextWindowCb from '../rules/rules.js';
 import {changeWindow as renderCb} from '../utils.js';
 
 export default () => {
