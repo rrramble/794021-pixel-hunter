@@ -89,16 +89,21 @@ export const isAnsweredFully = (gameData) => {
   return gameData.currentQuestionImageCount === getCheckedInputsCount();
 };
 
+const getAnswerOf3Image = (evt) => {
+  if (!evt) {
+    return false;
+  }
+  let images = [true, true, true];
+  const index = parseInt(evt.srcElement.id, 10);
+  images[index] = false;
+  return images;
+};
+
 export const getAnswers = (evt, imagesCount) => {
   if (imagesCount === 3) {
-    if (!evt) {
-      return false;
-    }
-    let images = [false, false, false];
-    const index = parseInt(evt.srcElement.id, 10);
-    images[index] = true;
-    return images;
+    return getAnswerOf3Image(evt);
   }
+
   const checkedNodes = document.querySelectorAll(CHECKED_ANSWERS_INPUT_SELECTOR);
   if (checkedNodes.length <= 0) {
     return undefined;
