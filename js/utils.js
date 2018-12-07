@@ -12,6 +12,9 @@ const getMainNode = () => {
 export const makeDomNode = (innerHtml, eventListeners) => {
   const node = document.createElement(`div`);
   node.innerHTML = innerHtml;
+  if (!eventListeners) {
+    return node;
+  }
   eventListeners.forEach((el) => {
     const subNode = node.querySelector(el.selector);
     subNode.addEventListener(el.type, el.cb);
