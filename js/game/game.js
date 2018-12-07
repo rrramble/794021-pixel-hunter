@@ -6,7 +6,7 @@ import GameData from './game-data.js';
 import {getAnswers} from './game-utils.js';
 import getQuestions from '../data/mock-questions.js';
 import goBeginWindow from '../greeting/greeting.js';
-import goStatistics from '../stats/stats-window';
+import goStatistics from '../stats/stats.js';
 import {changeWindow, getCountInputsChecked, isAnsweredYes} from '../utils.js';
 
 const QUESTIONS_IS_NOT_SHAFFLED = true;
