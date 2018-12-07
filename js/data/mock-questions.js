@@ -52,7 +52,7 @@ const questions = [
   [images[2]],
   [images[1], images[2]],
   [images[3]],
-  [images[0], images[2], images[3]],
+  [images[3], images[0], images[1]],
   [images[2], images[3]],
 
   /*
