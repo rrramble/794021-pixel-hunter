@@ -2,7 +2,7 @@
 
 const MAX_LIVES = 3;
 const UNANSWERED_QUESTIONS_SCORE = -1;
-const MAX_ANSWER_TIME = 30;
+const MAX_ANSWER_TIME = 5;
 const SECONDS_LEFT_OF_QUICK_ANSWER = 20;
 const SECONDS_LEFT_OF_SLOW_ANSWER = 10;
 
@@ -101,7 +101,7 @@ class GameData {
   }
 
   decreaseLive() {
-    if (this._state.restLives > 0) {
+    if (this._state.restLives >= 0) {
       --this._state.restLives;
     }
     return this._state.restLives;
@@ -128,9 +128,19 @@ class GameData {
     }
   }
 
+  _isPhotoAnswerCorrect(photoAnswers) {
+    if (!photoAnswers) {
+      return false;
+    }
+    return photoAnswers.every((photoAnswer, index) => {
+      const isPhoto = this.currentQuestion[index].isPhoto;
+      return photoAnswer === isPhoto;
+    });
+  }
+
   isGameFinished() {
     return this.currentLevelNumber >= this.levels.length ||
-      this.restLives <= 0;
+      this.restLives < 0;
   }
 
   get levels() {
@@ -190,10 +200,10 @@ class GameData {
       this.restLivesScore;
   }
 
-  setCurrentLevelAnswer(isAnswerCorrect) {
+  setCurrentLevelAnswer(answers) {
     this.currentLevel.isAnswered = true;
-    this.currentLevel.isAnswerCorrect = isAnswerCorrect;
-    if (!isAnswerCorrect) {
+    this.currentLevel.isAnswerCorrect = this._isPhotoAnswerCorrect(answers);
+    if (!this.currentLevel.isAnswerCorrect) {
       this.decreaseLive();
     }
   }

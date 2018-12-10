@@ -1,11 +1,16 @@
 const QUESTONS_COUNT = 10;
-const ANSWER_INPUT_SELECTOR = `.game__answer input`;
+const CHECKED_ANSWERS_INPUT_SELECTOR = `.game__answer input:checked`;
 
 const PointsForAnswer = {
   CORRECT: 100,
   QUICK: 50,
   SLOW: -50,
   REST_LIVE: 50
+};
+
+const IMAGE_TYPE_IS_PHOTO = {
+  'photo': true,
+  'paint': false,
 };
 
 const IconClassName = {
@@ -81,19 +86,42 @@ export const isAnsweredFully = (gameData) => {
   if (gameData.currentQuestionImageCount === 3) {
     return true;
   }
-  if (gameData.currentQuestionImageCount === getCheckedInputsCount()) {
-    return true;
-  }
-  return false;
+  return gameData.currentQuestionImageCount === getCheckedInputsCount();
 };
 
-export const isAnswerCorrect = () => {
-  return Math.random() < 0.7; // !!! Mock answer result
+const getAnswerOf3Image = (evt) => {
+  if (!evt) {
+    return false;
+  }
+  let images = [true, true, true];
+  const index = parseInt(evt.srcElement.id, 10);
+  images[index] = false;
+  return images;
+};
+
+export const getAnswers = (evt, imagesCount) => {
+  if (imagesCount === 3) {
+    return getAnswerOf3Image(evt);
+  }
+
+  const checkedNodes = document.querySelectorAll(CHECKED_ANSWERS_INPUT_SELECTOR);
+  if (checkedNodes.length <= 0) {
+    return undefined;
+  }
+  return [...checkedNodes].map((checkedNode) => {
+    return isImageTypePhoto(checkedNode.value);
+  });
+};
+
+const isImageTypePhoto = (imageTypeString) => {
+  return IMAGE_TYPE_IS_PHOTO[imageTypeString];
 };
 
 const getCheckedInputsCount = () => {
-  const nodes = document.querySelectorAll(ANSWER_INPUT_SELECTOR);
-  return [...nodes].reduce((accu, node) => {
-    return node.checked ? ++accu : accu;
-  }, 0);
+  const checkedNodes = document.querySelectorAll(CHECKED_ANSWERS_INPUT_SELECTOR);
+  return checkedNodes.length;
+};
+
+export const isUserNameValid = (name) => {
+  return !!name;
 };
