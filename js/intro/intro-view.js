@@ -13,6 +13,14 @@ export default class IntroView extends AbstractView {
     super();
   }
 
+  get element() {
+    return this._render();
+  }
+
+  set cb(cb) {
+    this._cb = cb;
+  }
+
   get template() {
     return `
       <section class="intro">
@@ -22,12 +30,15 @@ export default class IntroView extends AbstractView {
     `;
   }
 
-  render(cb) {
-    const eventListeners = [{
-      selector: EventListener.SELECTOR,
-      type: EventListener.TYPE,
-      cb,
-    }];
+  _render() {
+    let eventListeners;
+    if (this._cb) {
+      eventListeners = [{
+        selector: EventListener.SELECTOR,
+        type: EventListener.TYPE,
+        cb: this._cb,
+      }];
+    }
     return makeDomNode(this.template, eventListeners);
   }
 

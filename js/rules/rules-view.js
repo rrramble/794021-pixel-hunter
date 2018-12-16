@@ -19,6 +19,14 @@ export default class RulesView extends AbstractView {
     super();
   }
 
+  get element() {
+    return this._render();
+  }
+
+  set cbs(cbs) {
+    this._cbs = cbs;
+  }
+
   get template() {
     return `
       <header class="header">
@@ -51,19 +59,19 @@ export default class RulesView extends AbstractView {
     `;
   }
 
-  render(cb1, cb2, cb3) {
+  _render() {
     const eventListeners = [{
       selector: EventListeners[0].SELECTOR,
       type: EventListeners[0].TYPE,
-      cb: cb1,
+      cb: this.onBackScreenSelect,
     }, {
       selector: EventListeners[1].SELECTOR,
       type: EventListeners[1].TYPE,
-      cb: cb2,
+      cb: this.onUsernameInput,
     }, {
       selector: EventListeners[2].SELECTOR,
       type: EventListeners[2].TYPE,
-      cb: cb3,
+      cb: this.onSendUsername,
     }];
     return makeDomNode(this.template, eventListeners);
   }
