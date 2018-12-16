@@ -65,7 +65,12 @@ class Level {
 
 
 export default class GameModel {
-  constructor() {
+  constructor(username, questions) {
+    this.username = username;
+    this.levels = questions.map((question) => {
+      return new Level(question);
+    });
+    this.MAX_LIVES = MAX_LIVES;
   }
 
   get answersCount() {
@@ -108,11 +113,7 @@ export default class GameModel {
     return ++this.currentLevelNumber;
   }
 
-  init(questions, timeElapsedCb) {
-    this.levels = questions.map((question) => {
-      return new Level(question);
-    });
-    this.MAX_LIVES = MAX_LIVES;
+  init(timeElapsedCb) {
     this.restLives = MAX_LIVES;
     this.currentLevelNumber = 0;
 

@@ -5,13 +5,23 @@ import GameScreen from './game/game-screen.js';
 import StatsScreen from './stats/stats-screen.js';
 
 import GameModel from './game/game-model.js';
+import Loader from './data/loader.js';
 
 import {changeWindow} from './utils.js';
+
+const QUESTIONS_SHOULD_BE_MOCK = true;
+let questions;
 
 export default class Application {
   static showIntro() {
     const screen = new IntroScreen();
     changeWindow(screen.element);
+    questions = Loader.downloadQuestions(QUESTIONS_SHOULD_BE_MOCK);
+    questions.
+      then((responseQuestions) => {
+        questions = responseQuestions;
+        this.showGreeting();
+      });
   }
 
   static showGreeting() {
@@ -25,7 +35,7 @@ export default class Application {
   }
 
   static showGame(userName) {
-    const model = new GameModel(userName);
+    const model = new GameModel(userName, questions);
     const gameScreen = new GameScreen(model);
     changeWindow(gameScreen.element);
     gameScreen.start();

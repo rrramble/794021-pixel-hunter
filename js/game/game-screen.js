@@ -3,10 +3,8 @@
 import GameView from './game-view.js';
 import Application from '../application.js';
 import {changeWindow, getCountInputsChecked, isAnsweredYes} from '../utils.js';
-import getQuestions from '../data/mock-questions.js';
 import {getAnswers} from './game-utils.js';
 
-const QUESTIONS_IS_NOT_SHAFFLED = true;
 const CONTINUE_STARTED_GAME = true;
 const MILLISECONDS_TICK = 1000;
 const GAME_CANCELLING_CONFIRMATION_TEXT = `Вы уверены что хотите начать игру заново и сбросить результаты?`;
@@ -25,9 +23,8 @@ export default class GameScreen {
         this.start(CONTINUE_STARTED_GAME);
       }
     };
-    this._gameQuestions = getQuestions(QUESTIONS_IS_NOT_SHAFFLED);
     this._gameModel = gameModel;
-    this._gameModel.init(this._gameQuestions, this._processAnswer);
+    this._gameModel.init(this._processAnswer);
     this._view = new GameView(this._gameModel);
     this._timerID = null;
   }
