@@ -1,8 +1,8 @@
-// Game controller window
+// Game model
 
 const MAX_LIVES = 3;
 const UNANSWERED_QUESTIONS_SCORE = -1;
-const MAX_ANSWER_TIME = 5;
+const MAX_ANSWER_TIME = 30;
 const SECONDS_LEFT_OF_QUICK_ANSWER = 20;
 const SECONDS_LEFT_OF_SLOW_ANSWER = 10;
 
@@ -61,9 +61,10 @@ class Level {
   get question() {
     return this._question;
   }
-}
+} // Level
 
-class GameData {
+
+export default class GameModel {
   constructor() {
   }
 
@@ -84,10 +85,6 @@ class GameData {
     return this.levels[this.currentLevelNumber];
   }
 
-  get currentLevelNumber() {
-    return this.state.currentLevelNumber;
-  }
-
   get currentQuestion() {
     return this.currentLevel.question;
   }
@@ -101,27 +98,23 @@ class GameData {
   }
 
   decreaseLive() {
-    if (this._state.restLives >= 0) {
-      --this._state.restLives;
+    if (this.restLives >= 0) {
+      --this.restLives;
     }
-    return this._state.restLives;
+    return this.restLives;
   }
 
   increaseLevel() {
-    return ++this._state.currentLevelNumber;
+    return ++this.currentLevelNumber;
   }
 
   init(questions, timeElapsedCb) {
-    const levels = questions.map((question) => {
+    this.levels = questions.map((question) => {
       return new Level(question);
     });
-
-    this._state = {
-      levels,
-      MAX_LIVES,
-      restLives: MAX_LIVES,
-      currentLevelNumber: 0,
-    };
+    this.MAX_LIVES = MAX_LIVES;
+    this.restLives = MAX_LIVES;
+    this.currentLevelNumber = 0;
 
     if (timeElapsedCb) {
       this._timeElapsedCb = timeElapsedCb;
@@ -143,9 +136,9 @@ class GameData {
       this.restLives < 0;
   }
 
-  get levels() {
-    return this.state.levels;
-  }
+  /* get levels() {
+    return this.levels;
+  } */
 
   get normalSpeedAnswersCount() {
     return this.levels.reduce((accu, level) => {
@@ -158,10 +151,6 @@ class GameData {
       return 0;
     }
     return this.normalSpeedAnswersCount * Points.ADDITIONAL_FOR_NORMAL_SPEED_ANSWER;
-  }
-
-  get MAX_LIVES() {
-    return this.state.MAX_LIVES;
   }
 
   isThereUnansweredQuestion() {
@@ -179,10 +168,6 @@ class GameData {
       return 0;
     }
     return this.quickAnswersCount * Points.ADDITIONAL_FOR_QUICK_ANSWER;
-  }
-
-  get restLives() {
-    return this.state.restLives;
   }
 
   get restLivesScore() {
@@ -221,10 +206,6 @@ class GameData {
     return this.slowAnswersCount * Points.ADDITIONAL_FOR_SLOW_ANSWER;
   }
 
-  get state() {
-    return this._state;
-  }
-
   tickSecond() {
     const secondsLeft = this.currentLevel.tickSecond();
     if (secondsLeft <= 0 && this._timeElapsedCb) {
@@ -234,4 +215,3 @@ class GameData {
 
 }
 
-export default new GameData();
