@@ -26,7 +26,7 @@ export default class Loader {
       return new Promise((resolve) => {
         resolve(getMockQuestions());
       });
-    };
+    }
     return window.fetch(Url.QUESTIONS).
       then(checkStatus).
       then(getJsonFromResponse).

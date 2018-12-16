@@ -16,7 +16,7 @@ export default class Application {
   static showIntro() {
     const screen = new IntroScreen();
     changeWindow(screen.element);
-    questions = Loader.downloadQuestions(QUESTIONS_SHOULD_BE_MOCK);
+    questions = Loader.downloadQuestions(!QUESTIONS_SHOULD_BE_MOCK);
     questions.
       then((responseQuestions) => {
         questions = responseQuestions;
