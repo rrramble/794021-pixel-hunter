@@ -1,4 +1,4 @@
-// Game controller window
+// Game Model
 
 const MAX_LIVES = 3;
 const UNANSWERED_QUESTIONS_SCORE = -1;
