@@ -16,15 +16,11 @@ const checkStatus = (response) => {
 
 const getJsonFromResponse = (response) => response.json();
 
-const getMockQuestions = () => {
-  return mockQuestions;
-};
-
 export default class Loader {
   static downloadQuestions(shouldBeMock) {
     if (shouldBeMock) {
       return new Promise((resolve) => {
-        resolve(getMockQuestions());
+        resolve(mockQuestions);
       });
     }
     return window.fetch(Url.QUESTIONS).
