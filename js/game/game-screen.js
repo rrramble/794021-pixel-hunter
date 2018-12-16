@@ -14,9 +14,20 @@ const INPUTS_SELECTOR = `.game__content .game__option input`;
 
 export default class GameScreen {
   constructor(gameModel) {
+    this._processAnswer = (evt) => {
+      clearTimeout(this._timerID);
+      this._gameModel.setCurrentLevelAnswer(getAnswers(evt, this._gameModel.currentQuestionImageCount));
+      this._gameModel.increaseLevel();
+      if (this._gameModel.isGameFinished()) {
+        Application.showStats(this._gameModel);
+        return;
+      } else {
+        this.start(CONTINUE_STARTED_GAME);
+      }
+    };
     this._gameQuestions = getQuestions(QUESTIONS_IS_NOT_SHAFFLED);
     this._gameModel = gameModel;
-    this._gameModel.init(this._gameQuestions, this._processAnswer.bind(this));
+    this._gameModel.init(this._gameQuestions, this._processAnswer);
     this._view = new GameView(this._gameModel);
     this._timerID = null;
   }
@@ -34,18 +45,6 @@ export default class GameScreen {
 
   _isAllInputsSelected(inputNodes) {
     return getCountInputsChecked(inputNodes) >= this._gameModel.currentQuestionImageCount;
-  }
-
-  _processAnswer(evt) {
-    clearTimeout(this._timerID);
-    this._gameModel.setCurrentLevelAnswer(getAnswers(evt, this._gameModel.currentQuestionImageCount));
-    this._gameModel.increaseLevel();
-    if (this._gameModel.isGameFinished()) {
-      Application.showStats(this._gameModel);
-      return;
-    } else {
-      this.start(CONTINUE_STARTED_GAME);
-    }
   }
 
   start(isToBeContinued) {
