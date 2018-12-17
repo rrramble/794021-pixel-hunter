@@ -28,22 +28,7 @@ const images = [
   },
 ];
 
-const questions = [
-  /*
-  [images[0], images[2]],
-  [images[0], images[2]],
-  [images[0], images[2]],
-  [images[0], images[2]],
-  [images[2], images[0]],
-  [images[2], images[0]],
-  [images[2], images[0]],
-  [images[2], images[0]],
-  [images[0], images[1]],
-  [images[0], images[2]],
-  [images[2], images[3]],
-  [images[2], images[0]],
-  */
-
+const mockQuestions = [
   [images[0]],
   [images[0], images[1]],
   [images[0], images[1], images[3]],
@@ -54,26 +39,6 @@ const questions = [
   [images[3]],
   [images[3], images[0], images[1]],
   [images[2], images[3]],
-
-  /*
-  [images[0], images[2], images[3]],
-  [images[0], images[2], images[3]],
-  [images[0], images[2], images[3]],
-  [images[0], images[2], images[3]],
-  [images[0], images[2], images[3]],
-  [images[0], images[2], images[3]],
-  [images[0], images[2], images[3]],
-  [images[0], images[2], images[3]],
-  [images[0], images[2], images[3]],
-  [images[0], images[2], images[3]],
-  */
 ];
 
-const getQuestions = (shoudNotBeShaffled) => {
-  const sortFunction = shoudNotBeShaffled ?
-    () => 1 :
-    () => Math.random() - 0.5;
-  return questions.sort(sortFunction);
-};
-
-export default getQuestions;
+export default mockQuestions;
