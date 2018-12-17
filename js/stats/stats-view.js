@@ -12,6 +12,11 @@ export default class GameView extends AbstractView {
     this._gameData = gameData;
   }
 
+  addEarlierStatistics(statistics) {
+    this._earlierStatistics = statistics;
+    this._element = undefined;
+  }
+
   bind(node) {
     const cancelGameNode = node.querySelector(PREVIOUS_BUTTON_SELECTOR);
     cancelGameNode.addEventListener(`click`, this.onCancelGameClick);
@@ -57,10 +62,17 @@ export default class GameView extends AbstractView {
   }
 
   get _templateBody() {
+    return `
+      ${this._templateBodyThisGame}
+      ${this._earlierStatistics ? this._templateBodyEarlierStatistics : ``}
+    `;
+  }
+
+  get _templateBodyThisGame() {
     const gameState = this._gameData;
     return `
       <section class="result">
-        <h2 class="result__title">Победа!</h2>
+        <h2 class="result__title">${gameState.score >= 0 ? `Победа!` : `Поражение.`}</h2>
         <table class="result__table">
           <tr>
             <td class="result__number">1.</td>
@@ -84,7 +96,7 @@ export default class GameView extends AbstractView {
           <tr>
             <td></td>
             <td class="result__extra">Бонус за жизни:</td>
-            <td class="result__extra">${gameState.restLives} <span class="stats__result stats__result--alive"></span></td>
+            <td class="result__extra">${Math.max(gameState.restLives, 0)} <span class="stats__result stats__result--alive"></span></td>
             <td class="result__points">× 50</td>
             <td class="result__total">${gameState.restLivesScore}</td>
           </tr>
@@ -99,60 +111,33 @@ export default class GameView extends AbstractView {
             <td colspan="5" class="result__total  result__total--final">${gameState.score}</td>
           </tr>
         </table>
+    `;
+  }
+
+  _templateBodyEarlierStatistic(oneGame, index) {
+    const score = oneGame.score;
+    return `
         <table class="result__table">
           <tr>
-            <td class="result__number">2.</td>
+            <td class="result__number">${index}.</td>
             <td>
               <ul class="stats">
-                <li class="stats__result stats__result--wrong"></li>
-                <li class="stats__result stats__result--slow"></li>
-                <li class="stats__result stats__result--fast"></li>
-                <li class="stats__result stats__result--correct"></li>
-                <li class="stats__result stats__result--wrong"></li>
-                <li class="stats__result stats__result--unknown"></li>
-                <li class="stats__result stats__result--slow"></li>
-                <li class="stats__result stats__result--wrong"></li>
-                <li class="stats__result stats__result--fast"></li>
-                <li class="stats__result stats__result--wrong"></li>
+                ${getFooterScoreIconClassNames(oneGame).map((className) => `
+                  <li class="stats__result ${className}"></li>
+                `).join(``)}
               </ul>
             </td>
             <td class="result__total"></td>
-            <td class="result__total  result__total--final">fail</td>
+            <td class="result__total  result__total--final">${score > 0 ? score : `fail`}</td>
           </tr>
         </table>
-        <table class="result__table">
-          <tr>
-            <td class="result__number">3.</td>
-            <td colspan="2">
-              <ul class="stats">
-                <li class="stats__result stats__result--wrong"></li>
-                <li class="stats__result stats__result--slow"></li>
-                <li class="stats__result stats__result--fast"></li>
-                <li class="stats__result stats__result--correct"></li>
-                <li class="stats__result stats__result--wrong"></li>
-                <li class="stats__result stats__result--unknown"></li>
-                <li class="stats__result stats__result--slow"></li>
-                <li class="stats__result stats__result--unknown"></li>
-                <li class="stats__result stats__result--fast"></li>
-                <li class="stats__result stats__result--unknown"></li>
-              </ul>
-            </td>
-            <td class="result__points">× 100</td>
-            <td class="result__total">900</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td class="result__extra">Бонус за жизни:</td>
-            <td class="result__extra">2 <span class="stats__result stats__result--alive"></span></td>
-            <td class="result__points">× 50</td>
-            <td class="result__total">100</td>
-          </tr>
-          <tr>
-            <td colspan="5" class="result__total  result__total--final">950</td>
-          </tr>
-        </table>
-      </section>
     `;
+  }
+
+  get _templateBodyEarlierStatistics() {
+    return this._earlierStatistics.reduce((accu, oneGameLevels, index) => {
+      return `${accu}${this._templateBodyEarlierStatistic(oneGameLevels, index + 1)}`;
+    }, ``);
   }
 
   render() {

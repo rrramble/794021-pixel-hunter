@@ -1,6 +1,14 @@
 const QUESTONS_COUNT = 10;
 const CHECKED_ANSWERS_INPUT_SELECTOR = `.game__answer input:checked`;
 
+export const AnswerState = {
+  UNANSWERED: 1,
+  INCORRECT: 2,
+  QUICK: 3,
+  NORMAL: 4,
+  SPEED: 5,
+};
+
 const PointsForAnswer = {
   CORRECT: 100,
   QUICK: 50,
@@ -66,15 +74,16 @@ export const getTimeLeft = (timeLimit, timeElapsed) => {
 };
 
 export const getFooterScoreIconClassNames = (gameData) => {
-  return gameData.levels.map((level, index) => {
-    switch (true) {
-      case (index >= gameData.currentLevelNumber || !level.isAnswered):
-        return IconClassName.NOT_ANSWERED;
-      case (!level.isAnswerCorrect):
+  return gameData.levels.map((level) => {
+    if (level.isUnanswered) {
+      return IconClassName.NOT_ANSWERED;
+    }
+    switch (level.answerState) {
+      case AnswerState.INCORRECT:
         return IconClassName.NOT_CORRECT;
-      case (level.isAnswerSlow()):
+      case AnswerState.SLOW:
         return IconClassName.CORRECT_SLOW;
-      case (level.isAnswerQuick()):
+      case AnswerState.QUICK:
         return IconClassName.CORRECT_QUICK;
       default:
         return IconClassName.CORRECT;

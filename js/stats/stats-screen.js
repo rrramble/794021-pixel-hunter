@@ -13,4 +13,8 @@ export default class StatsScreen {
     return this._view.element;
   }
 
+  addEarlierStatistics(statistics) {
+    this._view.addEarlierStatistics(statistics);
+  }
+
 }
