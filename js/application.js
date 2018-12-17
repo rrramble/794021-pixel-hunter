@@ -59,6 +59,7 @@ export default class Application {
         screen.addEarlierStatistics(models);
         changeWindow(screen.element);
       }).
+      catch((err) => console.error(err)).
       then(() => Loader.uploadStatistic(model));
   }
 

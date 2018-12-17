@@ -3,17 +3,17 @@
 import Adapter from './adapter.js';
 import mockQuestions from './mock-questions.js';
 
-const APP_ID = `794021-0`;
+const APP_ID = `794021`;
 const Url = {
   QUESTIONS: `https://es.dump.academy/pixel-hunter/questions`,
-  STATISTICS_TEMPLATE: `https://es.dump.academy/pixel-hunter/stats/:${APP_ID}:`,
+  STATISTICS_TEMPLATE: `https://es.dump.academy/pixel-hunter/stats/${APP_ID}-`,
 };
 
 const checkStatus = (response) => {
   if (response.ok) {
     return response;
   }
-  throw new Error(`${response.status}: ${response.statusText}`);
+  throw new Error(`${response.url} : ${response.status} : ${response.statusText}`);
 };
 
 const getJsonFromResponse = (response) => response.json();
