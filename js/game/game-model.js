@@ -1,5 +1,7 @@
 // Game model
 
+import {AnswerState} from './game-utils.js';
+
 const MAX_LIVES = 3;
 const UNANSWERED_QUESTIONS_SCORE = -1;
 const MAX_ANSWER_TIME = 30;
@@ -16,66 +18,84 @@ const Points = {
 
 class Level {
   constructor(question) {
-    this._question = question;
-    this._secondsLeft = MAX_ANSWER_TIME;
-    this.isAnswered = false;
-    this.isAnswerCorrect = undefined;
+    this.question = question;
+    this.secondsLeft = MAX_ANSWER_TIME;
+    this.answerState = AnswerState.UNANSWERED;
   }
 
-  isAnswerNormalSpeed() {
-    return this.isAnswerCorrect && !this.isAnswerQuick() && !this.isAnswerSlow();
+  setAnswerState(levelState) {
+    this.answerState = levelState.answerState;
+    this.restLives = levelState.restLives;
   }
 
-  isAnswerQuick() {
-    return this.isAnswerCorrect && this.secondsLeft > SECONDS_LEFT_OF_QUICK_ANSWER;
-  }
-
-  isAnswerSlow() {
-    return this.isAnswerCorrect && this.secondsLeft < SECONDS_LEFT_OF_SLOW_ANSWER;
+  get isUnanswered() {
+    return this.answerState === AnswerState.UNANSWERED;
   }
 
   get score() {
-    if (!this.isAnswered) {
-      return 0;
+    switch (this.answerState) {
+      case AnswerState.UNANSWERED:
+        return UNANSWERED_QUESTIONS_SCORE;
+      case AnswerState.INCORRECT:
+        return 0;
+      case AnswerState.SLOW:
+        return Points.NORMAL + Points.ADDITIONAL_FOR_SLOW_ANSWER;
+      case AnswerState.SPEED:
+        return Points.NORMAL + Points.ADDITIONAL_FOR_NORMAL_SPEED_ANSWER;
+      default:
+        return Points.NORMAL;
     }
-    let addendum;
-    if (this.isAnswerQuick()) {
-      addendum = Points.ADDITIONAL_FOR_QUICK_ANSWER;
-    } else if (this.isAnswerSlow()) {
-      addendum = Points.ADDITIONAL_FOR_SLOW_ANSWER;
-    }
-    return Points.FOR_CORRECT_ANSWER + addendum;
   }
 
-  get secondsLeft() {
-    return this._secondsLeft;
+  setAnswer(isCorrect) {
+    if (!isCorrect) {
+      this.answerState = AnswerState.INCORRECT;
+      return;
+    }
+    switch (true) {
+      case this.secondsLeft >= SECONDS_LEFT_OF_QUICK_ANSWER:
+        this.answerState = AnswerState.QUICK;
+        break;
+      case this.secondsLeft <= SECONDS_LEFT_OF_SLOW_ANSWER:
+        this.answerState = AnswerState.SLOW;
+        break;
+      default:
+        this.answerState = AnswerState.NORMAL;
+    }
   }
 
   tickSecond() {
-    if (this._secondsLeft >= 0) {
-      return --this._secondsLeft;
+    if (this.secondsLeft >= 0) {
+      return --this.secondsLeft;
     }
     return 0;
   }
 
-  get question() {
-    return this._question;
-  }
 } // Level
 
 
 export default class GameModel {
-  constructor(username, questions) {
+  constructor(username) {
     this.username = username;
-    this.levels = questions.map((question) => {
-      return new Level(question);
-    });
     this.MAX_LIVES = MAX_LIVES;
+  }
+
+  addAnswerState(answerState) {
+    if (!this.levels) {
+      this.levels = [];
+    }
+    const level = new Level();
+    level.setAnswerState(answerState);
+    this.levels.push(level);
   }
 
   get answersCount() {
     return this.levels.reduce((accu, level) => {
-      return level.isAnswerCorrect ? ++accu : accu;
+      const isCorrect =
+        level.answerState === AnswerState.SLOW ||
+        level.answerState === AnswerState.NORMAL ||
+        level.answerState === AnswerState.SPEED;
+      return isCorrect ? ++accu : accu;
     }, 0);
   }
 
@@ -133,17 +153,17 @@ export default class GameModel {
   }
 
   isGameFinished() {
-    return this.currentLevelNumber >= this.levels.length ||
-      this.restLives < 0;
+    return this.restLives < 0 ||
+      this.currentLevelNumber >= this.levels.length;
   }
 
-  /* get levels() {
-    return this.levels;
-  } */
+  isThereUnansweredQuestion() {
+    return this.levels.some((level) => level.answerState === AnswerState.UNANSWERED);
+  }
 
   get normalSpeedAnswersCount() {
     return this.levels.reduce((accu, level) => {
-      return level.isAnswerNormalSpeed() ? ++accu : accu;
+      return level.answerState === AnswerState.NORMAL ? ++accu : accu;
     }, 0);
   }
 
@@ -154,13 +174,15 @@ export default class GameModel {
     return this.normalSpeedAnswersCount * Points.ADDITIONAL_FOR_NORMAL_SPEED_ANSWER;
   }
 
-  isThereUnansweredQuestion() {
-    return this.levels.some((level) => !level.isAnswered);
+  set questions(questions) {
+    this.levels = questions.map((question) => {
+      return new Level(question);
+    });
   }
 
   get quickAnswersCount() {
     return this.levels.reduce((accu, level) => {
-      return level.isAnswerQuick() ? ++accu : accu;
+      return level.answerState === AnswerState.QUICK ? ++accu : accu;
     }, 0);
   }
 
@@ -172,7 +194,9 @@ export default class GameModel {
   }
 
   get restLivesScore() {
-    return this.restLives * Points.REST_LIVE_SCORE;
+    return this.restLives >= 0 ?
+      this.restLives * Points.REST_LIVE_SCORE :
+      0;
   }
 
   get score() {
@@ -187,16 +211,16 @@ export default class GameModel {
   }
 
   setCurrentLevelAnswer(answers) {
-    this.currentLevel.isAnswered = true;
-    this.currentLevel.isAnswerCorrect = this._isPhotoAnswerCorrect(answers);
-    if (!this.currentLevel.isAnswerCorrect) {
+    const isCorrect = this._isPhotoAnswerCorrect(answers);
+    this.currentLevel.setAnswer(isCorrect);
+    if (!isCorrect) {
       this.decreaseLive();
     }
   }
 
   get slowAnswersCount() {
     return this.levels.reduce((accu, level) => {
-      return level.isAnswerSlow() ? ++accu : accu;
+      return level.answerState === AnswerState.SLOW ? ++accu : accu;
     }, 0);
   }
 
