@@ -16,11 +16,6 @@ const PointsForAnswer = {
   REST_LIVE: 50
 };
 
-const IMAGE_TYPE_IS_PHOTO = {
-  'photo': true,
-  'paint': false,
-};
-
 const IconClassName = {
   NOT_ANSWERED: `stats__result--unknown`,
   NOT_CORRECT: `stats__result--wrong`,
@@ -98,32 +93,30 @@ export const isAnsweredFully = (gameData) => {
   return gameData.currentAnswersImageCount === getCheckedInputsCount();
 };
 
-const getAnswerOf3Image = (evt) => {
-  if (!evt) {
-    return false;
-  }
-  let images = [true, true, true];
-  const index = parseInt(evt.srcElement.id, 10);
-  images[index] = false;
-  return images;
-};
-
-export const getAnswers = (evt, imagesCount) => {
-  if (imagesCount === 3) {
-    return getAnswerOf3Image(evt);
-  }
-
+const getAnswerFrom1Or2Images = () => {
   const checkedNodes = document.querySelectorAll(CHECKED_ANSWERS_INPUT_SELECTOR);
   if (checkedNodes.length <= 0) {
-    return undefined;
+    return null;
   }
   return [...checkedNodes].map((checkedNode) => {
-    return isImageTypePhoto(checkedNode.value);
+    return checkedNode.value;
   });
 };
 
-const isImageTypePhoto = (imageTypeString) => {
-  return IMAGE_TYPE_IS_PHOTO[imageTypeString];
+const getAnswerFrom3Images = (evt) => {
+  if (!evt) {
+    return null;
+  }
+  return [parseInt(evt.srcElement.id, 10)];
+};
+
+export const getAnswers = (evt, imagesCount) => {
+  switch (imagesCount) {
+    case 3:
+      return getAnswerFrom3Images(evt);
+    default:
+      return getAnswerFrom1Or2Images();
+  }
 };
 
 const getCheckedInputsCount = () => {

@@ -58,7 +58,8 @@ export default class Application {
         changeWindow([screen.element]);
       }).
       catch(() => {}).
-      then(() => Loader.uploadStatistic(model));
+      then(() => Loader.uploadStatistic(model)).
+      catch(() => {});
   }
 
 }

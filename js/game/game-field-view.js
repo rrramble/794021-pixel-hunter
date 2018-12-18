@@ -76,7 +76,7 @@ export default class GameView extends AbstractView {
             <span>Фото</span>
           </label>
           <label class="game__answer  game__answer--paint">
-            <input class="visually-hidden" name="question1" type="radio" value="paint">
+            <input class="visually-hidden" name="question1" type="radio" value="painting">
             <span>Рисунок</span>
           </label>
         </div>
@@ -102,7 +102,7 @@ export default class GameView extends AbstractView {
               <span>Фото</span>
             </label>
             <label class="game__answer game__answer--paint">
-              <input class="visually-hidden" name="question${index + 1}" type="radio" value="paint">
+              <input class="visually-hidden" name="question${index + 1}" type="radio" value="painting">
               <span>Рисунок</span>
             </label>
           </div>

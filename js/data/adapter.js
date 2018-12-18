@@ -9,7 +9,7 @@ const adaptAnswers = (answers) => {
       height: answer.image.height,
       width: answer.image.width,
       url: answer.image.url,
-      isPhoto: answer.type === `photo`,
+      type: answer.type,
     };
   });
 };
@@ -99,7 +99,7 @@ export default class Adapter {
       const adaptedLevelResult = adaptDownloadingLevel(levelResult);
       model.addAnswerState(adaptedLevelResult);
     });
-    model.restLives = oneGame.lives;
+    model.restLives = Math.max(oneGame.lives, 0);
     return model;
   }
 

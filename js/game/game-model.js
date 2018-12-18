@@ -18,19 +18,44 @@ const Points = {
 
 class Level {
   constructor(level) {
-    this.questionText = level.questionText;
-    this.answers = level.answers;
+    if (level) {
+      this.questionText = level.questionText;
+      this.answers = level.answers;
+    }
     this.secondsLeft = MAX_ANSWER_TIME;
     this.answerState = AnswerState.UNANSWERED;
   }
 
   setAnswerState(levelState) {
     this.answerState = levelState.answerState;
-    this.restLives = levelState.restLives;
   }
 
   get isUnanswered() {
     return this.answerState === AnswerState.UNANSWERED;
+  }
+
+  pushChoices(choices) {
+    let isCorrect;
+    switch (this.answers.length) {
+      case 1:
+        isCorrect =
+          choices[0] === this.answers[0].type;
+        break;
+      case 2:
+        isCorrect =
+          choices[0] === this.answers[0].type &&
+          choices[1] === this.answers[1].type;
+        break;
+      case 3:
+        let types = this.answers.map((answer) => answer.type);
+        types.splice(choices[0], 1);
+        isCorrect = types[0] === types[1];
+        break;
+      default:
+        isCorrect = false;
+    }
+    this._setAnswerCorrectness(isCorrect);
+    return isCorrect;
   }
 
   get score() {
@@ -48,7 +73,7 @@ class Level {
     }
   }
 
-  setAnswer(isCorrect) {
+  _setAnswerCorrectness(isCorrect) {
     if (!isCorrect) {
       this.answerState = AnswerState.INCORRECT;
       return;
@@ -141,16 +166,6 @@ export default class GameModel {
     this.currentLevelNumber = 0;
   }
 
-  _isPhotoAnswerCorrect(photoAnswers) {
-    if (!photoAnswers) {
-      return false;
-    }
-    return photoAnswers.every((photoAnswer, index) => {
-      const isPhoto = this.currentAnswers[index].isPhoto;
-      return photoAnswer === isPhoto;
-    });
-  }
-
   isGameFinished() {
     return this.restLives < 0 ||
       this.currentLevelNumber >= this.levels.length;
@@ -170,6 +185,13 @@ export default class GameModel {
   }
 
   onTimeElapsed() {
+  }
+
+  pushCurrentLevelAnswer(choices) {
+    const isCorrect = this.currentLevel.pushChoices(choices);
+    if (!isCorrect) {
+      this.decreaseLive();
+    }
   }
 
   get quickAnswersCount() {
@@ -202,14 +224,6 @@ export default class GameModel {
       this.quickAnswersAdditionalScore +
       this.slowAnswersAdditionalScore +
       this.restLivesScore;
-  }
-
-  setCurrentLevelAnswer(answers) {
-    const isCorrect = this._isPhotoAnswerCorrect(answers);
-    this.currentLevel.setAnswer(isCorrect);
-    if (!isCorrect) {
-      this.decreaseLive();
-    }
   }
 
   setLevels(levels) {
