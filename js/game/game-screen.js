@@ -15,7 +15,6 @@ const INPUTS_SELECTOR = `.game__content .game__option input`;
 export default class GameScreen {
   constructor(gameModel) {
     this._gameModel = gameModel;
-    this._gameModel.init(this._processAnswer);
     this._timerID = null;
     this._reinitHeaderView();
     this._reinitFieldView();
@@ -24,6 +23,11 @@ export default class GameScreen {
       this._headerView.updateTime();
       replaceNode(this._headerView.element, 0);
     };
+
+    this._gameModel.onTimeElapsed = () => {
+      this._processAnswer();
+    };
+
   }
 
   _reinitHeaderView() {
@@ -35,8 +39,8 @@ export default class GameScreen {
 
   _reinitFieldView() {
     this._fieldView = new GameFieldView(this._gameModel);
-    this._fieldView.onAnswerClick = () => {
-      this._verifyUserAnswerClick();
+    this._fieldView.onAnswerClick = (evt) => {
+      this._verifyUserAnswerClick(evt);
     };
   }
 
@@ -60,7 +64,9 @@ export default class GameScreen {
 
   _processAnswer(evt) {
     clearTimeout(this._timerID);
-    this._gameModel.setCurrentLevelAnswer(getAnswers(evt, this._gameModel.currentQuestionImageCount));
+    if (!!evt) {
+      this._gameModel.setCurrentLevelAnswer(getAnswers(evt, this._gameModel.currentQuestionImageCount));
+    }
     this._gameModel.increaseLevel();
     if (this._gameModel.isGameFinished()) {
       Application.showStats(this._gameModel);
@@ -75,7 +81,7 @@ export default class GameScreen {
       this._reinitHeaderView();
       this._reinitFieldView();
     } else {
-      this._gameModel.init(this._gameQuestions, this._processAnswer);
+      this._gameModel.reinit();
     };
 
     changeWindow(this.elements);

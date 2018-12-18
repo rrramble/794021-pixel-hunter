@@ -78,6 +78,8 @@ export default class GameModel {
   constructor(username) {
     this.username = username;
     this.MAX_LIVES = MAX_LIVES;
+    this.restLives = MAX_LIVES;
+    this.currentLevelNumber = 0;
   }
 
   addAnswerState(answerState) {
@@ -133,13 +135,9 @@ export default class GameModel {
     return ++this.currentLevelNumber;
   }
 
-  init(timeElapsedCb) {
+  reinit() {
     this.restLives = MAX_LIVES;
     this.currentLevelNumber = 0;
-
-    if (timeElapsedCb) {
-      this._timeElapsedCb = timeElapsedCb;
-    }
   }
 
   _isPhotoAnswerCorrect(photoAnswers) {
@@ -168,6 +166,9 @@ export default class GameModel {
   }
 
   onTickSecond() {
+  }
+
+  onTimeElapsed() {
   }
 
   set questions(questions) {
@@ -229,8 +230,8 @@ export default class GameModel {
   tickSecond() {
     const secondsLeft = this.currentLevel.tickSecond();
     this.onTickSecond();
-    if (secondsLeft <= 0 && this._timeElapsedCb) {
-      this._timeElapsedCb();
+    if (secondsLeft <= 0) {
+      this.onTimeElapsed();
     }
   }
 
