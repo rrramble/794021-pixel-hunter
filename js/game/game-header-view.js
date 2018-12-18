@@ -1,9 +1,14 @@
 // View class of 'Rules' window
 
 import AbstractView from '../utils/abstract-view.js';
+import {isRestSecondsOdd} from './game-utils.js';
 import {makeDomNode, makeArray} from '../utils.js';
 
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
+const Blink = {
+  SECONDS: 5,
+  HTML_STYLE: `style="color:red;"`,
+};
 
 export default class GameHeaderView extends AbstractView {
   constructor(gameData) {
@@ -36,6 +41,7 @@ export default class GameHeaderView extends AbstractView {
     const secondsLeft = this._gameData.currentQuestionSecondsLeft;
     const restLives = this._gameData.restLives;
     const lostLives = this._gameData.MAX_LIVES - restLives;
+    const blinkTemplate = isRestSecondsOdd(secondsLeft, Blink.SECONDS) ? Blink.HTML_STYLE : ``;
     return `
       <header class="header">
         <button class="back">
@@ -47,7 +53,7 @@ export default class GameHeaderView extends AbstractView {
             <use xlink:href="img/sprite.svg#logo-small"></use>
           </svg>
         </button>
-        <div class="game__timer">${secondsLeft}</div>
+        <div class="game__timer" ${blinkTemplate}>${secondsLeft}</div>
         <div class="game__lives">
         ${new Array(lostLives)
           .fill(`<img src="img/heart__empty.svg" class="game__heart" alt="Life" width="31" height="27">`)

@@ -134,3 +134,7 @@ const getCheckedInputsCount = () => {
 export const isUserNameValid = (name) => {
   return !!name;
 };
+
+export const isRestSecondsOdd = (seconds, base) => {
+  return seconds <= base && seconds % 2 !== 0;
+};
