@@ -1,4 +1,4 @@
-// 'Greeting' presenter
+// Presenter of the 'Greeting' window
 
 import GreetingView from './greeting-view.js';
 import Application from '../application.js';
