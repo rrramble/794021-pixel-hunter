@@ -30,32 +30,33 @@ class Level {
     this.answerState = levelState.answerState;
   }
 
+  _isAnswerCorrect(choices) {
+    if (!choices) {
+      return false;
+    }
+    switch (this.answers.length) {
+      case 1:
+        return choices[0] === this.answers[0].type;
+      case 2:
+        return choices[0] === this.answers[0].type &&
+          choices[1] === this.answers[1].type;
+      case 3:
+        let types = this.answers.map((answer) => answer.type);
+        types.splice(choices[0], 1);
+        return types[0] === types[1];
+      default:
+        return false;
+    }
+  }
+
   get isUnanswered() {
     return this.answerState === AnswerState.UNANSWERED;
   }
 
   pushChoices(choices) {
-    let isCorrect;
-    switch (this.answers.length) {
-      case 1:
-        isCorrect =
-          choices[0] === this.answers[0].type;
-        break;
-      case 2:
-        isCorrect =
-          choices[0] === this.answers[0].type &&
-          choices[1] === this.answers[1].type;
-        break;
-      case 3:
-        let types = this.answers.map((answer) => answer.type);
-        types.splice(choices[0], 1);
-        isCorrect = types[0] === types[1];
-        break;
-      default:
-        isCorrect = false;
-    }
-    this._setAnswerCorrectness(isCorrect);
-    return isCorrect;
+    const isAnswerCorrect = this._isAnswerCorrect(choices);
+    this._setAnswerCorrectness(isAnswerCorrect);
+    return isAnswerCorrect;
   }
 
   get score() {
