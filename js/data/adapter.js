@@ -3,7 +3,7 @@
 import {AnswerState} from '../game/game-utils.js';
 import GameModel from '../game/game-model.js';
 
-const adaptAnswers = (answers) => {
+const adaptDownloadingAnswers = (answers) => {
   return answers.map((answer) => {
     return {
       height: answer.image.height,
@@ -14,14 +14,14 @@ const adaptAnswers = (answers) => {
   });
 };
 
-const adaptLevel = (level) => {
+const adaptDownloadingLevel = (level) => {
   return {
     questionText: level.question,
-    answers: adaptAnswers(level.answers),
+    answers: adaptDownloadingAnswers(level.answers),
   };
 };
 
-const adaptDownloadingLevel = (level) => {
+const adaptDownloadingLevelStatistic = (level) => {
   switch (level) {
     case `correct`:
       return {
@@ -68,35 +68,10 @@ const adaptUploadingGameStatistic = (level) => {
 
 export default class Adapter {
 
-  static downloadingStatistics(games) {
-    return games.map((game) => {
-      return {
-        levels: game.stats.map(adaptDownloadingLevel),
-        restLives: game.lives,
-      };
-    });
-  }
-
-  static makeLevels(levels) {
-    return levels.map((level) => {
-      return adaptLevel(level);
-    });
-  }
-
-  static uploadingStatistic(data) {
-    const stats = data.levels.map((level) => {
-      return adaptUploadingGameStatistic(level);
-    });
-    return {
-      stats,
-      lives: data.restLives >= 0 ? data.restLives : 0,
-    };
-  }
-
   static _getModelFromStatistic(oneGame) {
     const model = new GameModel(``);
     oneGame.stats.forEach((levelResult) => {
-      const adaptedLevelResult = adaptDownloadingLevel(levelResult);
+      const adaptedLevelResult = adaptDownloadingLevelStatistic(levelResult);
       model.addAnswerState(adaptedLevelResult);
     });
     model.restLives = Math.max(oneGame.lives, 0);
@@ -107,6 +82,22 @@ export default class Adapter {
     return statistics.map((oneGame) => {
       return this._getModelFromStatistic(oneGame);
     });
+  }
+
+  static makeDownloadingLevels(levels) {
+    return levels.map((level) => {
+      return adaptDownloadingLevel(level);
+    });
+  }
+
+  static makeUploadingStatistic(data) {
+    const stats = data.levels.map((level) => {
+      return adaptUploadingGameStatistic(level);
+    });
+    return {
+      stats,
+      lives: data.restLives >= 0 ? data.restLives : 0,
+    };
   }
 
 }
