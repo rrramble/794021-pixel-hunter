@@ -1,4 +1,4 @@
-// 'Intro' presenter
+// Presenter of the 'Intro' window
 
 import IntroView from './intro-view.js';
 import Application from '../application.js';
