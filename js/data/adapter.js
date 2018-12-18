@@ -3,8 +3,8 @@
 import {AnswerState} from '../game/game-utils.js';
 import GameModel from '../game/game-model.js';
 
-const adaptQuestion = (question) => {
-  return question.answers.map((answer) => {
+const adaptAnswers = (answers) => {
+  return answers.map((answer) => {
     return {
       height: answer.image.height,
       width: answer.image.width,
@@ -12,6 +12,13 @@ const adaptQuestion = (question) => {
       isPhoto: answer.type === `photo`,
     };
   });
+};
+
+const adaptLevel = (level) => {
+  return {
+    questionText: level.question,
+    answers: adaptAnswers(level.answers),
+  };
 };
 
 const adaptDownloadingLevel = (level) => {
@@ -70,9 +77,9 @@ export default class Adapter {
     });
   }
 
-  static questions(data) {
-    return data.map((question) => {
-      return adaptQuestion(question);
+  static makeLevels(levels) {
+    return levels.map((level) => {
+      return adaptLevel(level);
     });
   }
 

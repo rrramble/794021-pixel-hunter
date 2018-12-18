@@ -37,11 +37,11 @@ export default class GameView extends AbstractView {
   constructor(gameData) {
     super();
     this._gameData = gameData;
-    this._settings = PlaygroundType[this._gameData.currentQuestionImageCount];
+    this._settings = PlaygroundType[this._gameData.currentAnswersImageCount];
   }
 
   get template() {
-    switch (this._gameData.currentQuestionImageCount) {
+    switch (this._gameData.currentAnswersImageCount) {
       case 1:
         return `${this._templatePlayground1}`;
       case 2:
@@ -64,9 +64,10 @@ export default class GameView extends AbstractView {
 
   get _templatePlayground1() {
     const image = getFittedImages(this._gameData)[0];
+    const questionText = this._gameData.currentLevel.questionText;
     return `
     <section class="game">
-      <p class="game__task">Угадай, фото или рисунок?</p>
+      <p class="game__task">${questionText}</p>
       <form class="game__content  game__content--wide">
         <div class="game__option">
           <img src="${image.url}" alt="Option 1" width="${image.width}" height="${image.height}">
@@ -87,9 +88,10 @@ export default class GameView extends AbstractView {
 
   get _templatePlayground2() {
     const images = getFittedImages(this._gameData);
+    const questionText = this._gameData.currentLevel.questionText;
     return `
     <section class="game">
-      <p class="game__task">Угадайте для каждого изображения фото или рисунок?</p>
+      <p class="game__task">${questionText}</p>
       <form class="game__content">
 
         ${images.map((image, index) => `
@@ -113,9 +115,10 @@ export default class GameView extends AbstractView {
 
   get _templatePlayground3() {
     const images = getFittedImages(this._gameData);
+    const questionText = this._gameData.currentLevel.questionText;
     return `
     <section class="game">
-      <p class="game__task">Найдите рисунок среди изображений</p>
+      <p class="game__task">${questionText}</p>
       <form class="game__content  game__content--triple">
         ${images.map((image, index) => `
           <div class="game__option">
@@ -156,10 +159,10 @@ export default class GameView extends AbstractView {
 
 const getFittedImages = (gameData) => {
   const borderSize = {
-    width: PlaygroundType[gameData.currentQuestionImageCount].ImageSize.WIDTH,
-    height: PlaygroundType[gameData.currentQuestionImageCount].ImageSize.HEIGHT
+    width: PlaygroundType[gameData.currentAnswersImageCount].ImageSize.WIDTH,
+    height: PlaygroundType[gameData.currentAnswersImageCount].ImageSize.HEIGHT
   };
-  const images = gameData.currentQuestion.map((image) => {
+  const images = gameData.currentAnswers.map((image) => {
     const fittedSize = getFittedSize(
         borderSize,
         {width: image.width, height: image.height}

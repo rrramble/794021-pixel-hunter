@@ -17,8 +17,9 @@ const Points = {
 };
 
 class Level {
-  constructor(question) {
-    this.question = question;
+  constructor(level) {
+    this.questionText = level.questionText;
+    this.answers = level.answers;
     this.secondsLeft = MAX_ANSWER_TIME;
     this.answerState = AnswerState.UNANSWERED;
   }
@@ -112,15 +113,15 @@ export default class GameModel {
     return this.levels[this.currentLevelNumber];
   }
 
-  get currentQuestion() {
-    return this.currentLevel.question;
+  get currentAnswers() {
+    return this.currentLevel.answers;
   }
 
-  get currentQuestionImageCount() {
-    return this.currentQuestion.length;
+  get currentAnswersImageCount() {
+    return this.currentAnswers.length;
   }
 
-  get currentQuestionSecondsLeft() {
+  get currentLevelSecondsLeft() {
     return this.currentLevel.secondsLeft;
   }
 
@@ -145,7 +146,7 @@ export default class GameModel {
       return false;
     }
     return photoAnswers.every((photoAnswer, index) => {
-      const isPhoto = this.currentQuestion[index].isPhoto;
+      const isPhoto = this.currentAnswers[index].isPhoto;
       return photoAnswer === isPhoto;
     });
   }
@@ -169,12 +170,6 @@ export default class GameModel {
   }
 
   onTimeElapsed() {
-  }
-
-  set questions(questions) {
-    this.levels = questions.map((question) => {
-      return new Level(question);
-    });
   }
 
   get quickAnswersCount() {
@@ -212,6 +207,12 @@ export default class GameModel {
     if (!isCorrect) {
       this.decreaseLive();
     }
+  }
+
+  setLevels(levels) {
+    this.levels = levels.map((level) => {
+      return new Level(level);
+    });
   }
 
   get slowAnswersCount() {

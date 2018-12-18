@@ -59,7 +59,7 @@ export default class GameScreen {
   }
 
   _isAllInputsSelected(inputNodes) {
-    return getCountInputsChecked(inputNodes) >= this._gameModel.currentQuestionImageCount;
+    return getCountInputsChecked(inputNodes) >= this._gameModel.currentAnswersImageCount;
   }
 
   _processAnswer(evt) {

@@ -38,7 +38,7 @@ export default class GameHeaderView extends AbstractView {
   }
 
   get template() {
-    const secondsLeft = this._gameData.currentQuestionSecondsLeft;
+    const secondsLeft = this._gameData.currentLevelSecondsLeft;
     const restLives = this._gameData.restLives;
     const lostLives = this._gameData.MAX_LIVES - restLives;
     const blinkTemplate = isRestSecondsOdd(secondsLeft, Blink.SECONDS) ? Blink.HTML_STYLE : ``;

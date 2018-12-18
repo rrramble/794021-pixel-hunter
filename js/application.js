@@ -10,8 +10,7 @@ import Adapter from './data/adapter.js';
 
 import {changeWindow} from './utils.js';
 
-const QUESTIONS_SHOULD_BE_MOCK = false;
-let questions;
+let levels;
 let currentAppIsShowIntro;
 
 export default class Application {
@@ -19,9 +18,9 @@ export default class Application {
     currentAppIsShowIntro = true;
     const screen = new IntroScreen();
     changeWindow([screen.element]);
-    Loader.downloadQuestions(QUESTIONS_SHOULD_BE_MOCK).
-      then((responseQuestions) => {
-        questions = responseQuestions;
+    Loader.downloadQuestions().
+      then((loadedLevels) => {
+        levels = loadedLevels;
         if (currentAppIsShowIntro) {
           this.showGreeting();
         }
@@ -43,7 +42,7 @@ export default class Application {
   static showGame(userName) {
     currentAppIsShowIntro = false;
     const model = new GameModel(userName);
-    model.questions = questions;
+    model.setLevels(levels);
     const gameScreen = new GameScreen(model);
     gameScreen.start();
   }
