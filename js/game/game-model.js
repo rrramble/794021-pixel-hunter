@@ -173,6 +173,9 @@ export default class GameModel {
   }
 
   get quickAnswersCount() {
+    if (this.isThereUnansweredQuestion()) {
+      return 0;
+    }
     return this.levels.reduce((accu, level) => {
       return level.answerState === AnswerState.QUICK ? ++accu : accu;
     }, 0);
@@ -216,6 +219,9 @@ export default class GameModel {
   }
 
   get slowAnswersCount() {
+    if (this.isThereUnansweredQuestion()) {
+      return 0;
+    }
     return this.levels.reduce((accu, level) => {
       return level.answerState === AnswerState.SLOW ? ++accu : accu;
     }, 0);
