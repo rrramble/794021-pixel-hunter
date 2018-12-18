@@ -64,7 +64,8 @@ export default class GameScreen {
 
   _processAnswer(evt) {
     clearTimeout(this._timerID);
-    this._gameModel.setCurrentLevelAnswer(getAnswers(evt, this._gameModel.currentQuestionImageCount));
+    const answers = getAnswers(evt, this._gameModel.currentAnswersImageCount);
+    this._gameModel.setCurrentLevelAnswer(answers);
     this._gameModel.increaseLevel();
     if (this._gameModel.isGameFinished()) {
       Application.showStats(this._gameModel);

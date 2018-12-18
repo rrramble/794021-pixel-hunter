@@ -92,10 +92,10 @@ export const getFooterScoreIconClassNames = (gameData) => {
 };
 
 export const isAnsweredFully = (gameData) => {
-  if (gameData.currentQuestionImageCount === 3) {
+  if (gameData.currentAnswersImageCount === 3) {
     return true;
   }
-  return gameData.currentQuestionImageCount === getCheckedInputsCount();
+  return gameData.currentAnswersImageCount === getCheckedInputsCount();
 };
 
 const getAnswerOf3Image = (evt) => {
