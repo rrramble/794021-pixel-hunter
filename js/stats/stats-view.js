@@ -1,4 +1,4 @@
-// View class of 'Result Statistics' window
+// View of the 'Statistics' window
 
 import AbstractView from '../utils/abstract-view.js';
 import {getFooterScoreIconClassNames} from '../game/game-utils.js';
@@ -36,6 +36,10 @@ export default class GameView extends AbstractView {
 
   onCancelGameClick() {
     return new Error(`Should be redefined 'onCancelGameClick()'`);
+  }
+
+  render() {
+    return makeDomNode(this.template);
   }
 
   get template() {
@@ -138,10 +142,6 @@ export default class GameView extends AbstractView {
     return this._earlierStatistics.reduce((accu, oneGameLevels, index) => {
       return `${accu}${this._templateBodyEarlierStatistic(oneGameLevels, index + 1)}`;
     }, ``);
-  }
-
-  render() {
-    return makeDomNode(this.template);
   }
 
 }
