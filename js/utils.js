@@ -22,14 +22,20 @@ export const makeDomNode = (innerHtml, eventListeners) => {
   return node;
 };
 
-export const changeWindow = (node, shouldPreviousWindowBeSaved) => {
+export const changeWindow = (nodes, shouldPreviousWindowBeSaved) => {
   if (!shouldPreviousWindowBeSaved) {
     for (let i = getMainNode().children.length; i--;) {
       getMainNode().children[i].remove();
     }
   }
-  getMainNode().append(node);
+  nodes.forEach((node) => {
+    getMainNode().append(node);
+  });
 };
+
+export const replaceNode = (node, index = 0) => {
+  getMainNode().children[index].replaceWith(node);
+}
 
 export const enableFormInput = (domNode, shouldBeEnabled) => {
   domNode.disabled = !shouldBeEnabled;

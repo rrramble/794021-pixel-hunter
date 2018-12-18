@@ -167,6 +167,9 @@ export default class GameModel {
     }, 0);
   }
 
+  onTickSecond() {
+  }
+
   set questions(questions) {
     this.levels = questions.map((question) => {
       return new Level(question);
@@ -225,6 +228,7 @@ export default class GameModel {
 
   tickSecond() {
     const secondsLeft = this.currentLevel.tickSecond();
+    this.onTickSecond();
     if (secondsLeft <= 0 && this._timeElapsedCb) {
       this._timeElapsedCb();
     }

@@ -6,8 +6,6 @@ import {makeDomNode} from '../utils.js';
 import {getFooterScoreIconClassNames} from './game-utils.js';
 import {getFittedSize, makeArray} from '../utils';
 
-const PREVIOUS_BUTTON_SELECTOR = `.back`;
-
 const PlaygroundType = {
   '1': {
     HTML_SELECTOR: `.game__option input`,
@@ -42,6 +40,17 @@ export default class GameView extends AbstractView {
     this._settings = PlaygroundType[this._gameData.currentQuestionImageCount];
   }
 
+  get template() {
+    switch (this._gameData.currentQuestionImageCount) {
+      case 1:
+        return `${this._templatePlayground1}`;
+    case 2:
+        return `${this._templatePlayground2}`;
+      default:
+        return `${this._templatePlayground3}`;
+    }
+  }
+
   get _templateFooter() {
     const levelsClassNames = getFooterScoreIconClassNames(this._gameData);
     return `
@@ -51,45 +60,6 @@ export default class GameView extends AbstractView {
         `).join(``)}
       </ul>
     `;
-  }
-
-  get _templateHeader() {
-    const secondsLeft = this._gameData.currentQuestionSecondsLeft;
-    const restLives = this._gameData.restLives;
-    const lostLives = this._gameData.MAX_LIVES - restLives;
-    return `
-      <header class="header">
-        <button class="back">
-          <span class="visually-hidden">Вернуться к началу</span>
-          <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
-            <use xlink:href="img/sprite.svg#arrow-left"></use>
-          </svg>
-          <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
-            <use xlink:href="img/sprite.svg#logo-small"></use>
-          </svg>
-        </button>
-        <div class="game__timer">${secondsLeft}</div>
-        <div class="game__lives">
-        ${new Array(lostLives)
-          .fill(`<img src="img/heart__empty.svg" class="game__heart" alt="Life" width="31" height="27">`)
-          .join(``)}
-        ${makeArray(restLives)
-          .fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">`)
-          .join(``)}
-        </div>
-      </header>
-    `;
-  }
-
-  get _templatePlayground() {
-    switch (this._gameData.currentQuestionImageCount) {
-      case 1:
-        return this._templatePlayground1;
-      case 2:
-        return this._templatePlayground2;
-      default:
-        return this._templatePlayground3;
-    }
   }
 
   get _templatePlayground1() {
@@ -158,13 +128,6 @@ export default class GameView extends AbstractView {
   `;
   }
 
-  get template() {
-    return `
-      ${this._templateHeader}
-      ${this._templatePlayground}
-    `;
-  }
-
   render() {
     return makeDomNode(this.template);
   }
@@ -174,10 +137,6 @@ export default class GameView extends AbstractView {
     [...eventNodes].forEach((eventNode) => {
       eventNode.addEventListener(this._settings.EVENT_TYPE, this.onAnswerClick);
     });
-
-    const cancelGameNode = node.querySelector(PREVIOUS_BUTTON_SELECTOR);
-    cancelGameNode.addEventListener(`click`, this.onCancelGameClick);
-
     return node;
   }
 
@@ -192,11 +151,8 @@ export default class GameView extends AbstractView {
     return new Error(`Should be redefined 'onAnswerClick()'`);
   }
 
-  onCancelGameClick() {
-    return new Error(`Should be redefined 'onCancelGameClick()'`);
-  }
+} // GameFieldView
 
-}
 
 const getFittedImages = (gameData) => {
   const borderSize = {

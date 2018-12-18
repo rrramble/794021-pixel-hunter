@@ -1,8 +1,10 @@
 // Game presenter
 
-import GameView from './game-view.js';
+import GameHeaderView from './game-header-view.js';
+import GameFieldView from './game-field-view.js';
+
 import Application from '../application.js';
-import {changeWindow, getCountInputsChecked, isAnsweredYes} from '../utils.js';
+import {changeWindow, replaceNode, getCountInputsChecked, isAnsweredYes} from '../utils.js';
 import {getAnswers} from './game-utils.js';
 
 const CONTINUE_STARTED_GAME = true;
@@ -12,21 +14,30 @@ const INPUTS_SELECTOR = `.game__content .game__option input`;
 
 export default class GameScreen {
   constructor(gameModel) {
-    this._processAnswer = (evt) => {
-      clearTimeout(this._timerID);
-      this._gameModel.setCurrentLevelAnswer(getAnswers(evt, this._gameModel.currentQuestionImageCount));
-      this._gameModel.increaseLevel();
-      if (this._gameModel.isGameFinished()) {
-        Application.showStats(this._gameModel);
-        return;
-      } else {
-        this.start(CONTINUE_STARTED_GAME);
-      }
-    };
     this._gameModel = gameModel;
     this._gameModel.init(this._processAnswer);
-    this._view = new GameView(this._gameModel);
     this._timerID = null;
+    this._reinitHeaderView();
+    this._reinitFieldView();
+
+    this._gameModel.onTickSecond = () => {
+      this._headerView.updateTime();
+      replaceNode(this._headerView.element, 0);
+    };
+  }
+
+  _reinitHeaderView() {
+    this._headerView = new GameHeaderView(this._gameModel);
+    this._headerView.onCancelGameClick = () => {
+      this._confirmCancellingGame();
+    };
+  }
+
+  _reinitFieldView() {
+    this._fieldView = new GameFieldView(this._gameModel);
+    this._fieldView.onAnswerClick = () => {
+      this._verifyUserAnswerClick();
+    };
   }
 
   _confirmCancellingGame() {
@@ -36,24 +47,42 @@ export default class GameScreen {
     }
   }
 
-  get element() {
-    return this._view.element;
+  get elements() {
+    return [
+      this._headerView.element,
+      this._fieldView.element
+    ];
   }
 
   _isAllInputsSelected(inputNodes) {
     return getCountInputsChecked(inputNodes) >= this._gameModel.currentQuestionImageCount;
   }
 
-  start(isToBeContinued) {
-    if (!isToBeContinued) {
-      this._gameModel.init(this._gameQuestions, this._processAnswer);
+  _processAnswer(evt) {
+    clearTimeout(this._timerID);
+    this._gameModel.setCurrentLevelAnswer(getAnswers(evt, this._gameModel.currentQuestionImageCount));
+    this._gameModel.increaseLevel();
+    if (this._gameModel.isGameFinished()) {
+      Application.showStats(this._gameModel);
+      return;
+    } else {
+      this.start(CONTINUE_STARTED_GAME);
     }
-    this._timerID = setInterval(this._gameModel.tickSecond.bind(this._gameModel), MILLISECONDS_TICK);
+  };
 
-    const view = new GameView(this._gameModel);
-    view.onAnswerClick = this._verifyUserAnswerClick.bind(this);
-    view.onCancelGameClick = this._confirmCancellingGame.bind(this);
-    changeWindow(view.element);
+  start(isToBeContinued) {
+    if (isToBeContinued) {
+      this._reinitHeaderView();
+      this._reinitFieldView();
+    } else {
+      this._gameModel.init(this._gameQuestions, this._processAnswer);
+    };
+
+    changeWindow(this.elements);
+
+    this._timerID = setInterval(() => {
+      this._gameModel.tickSecond()
+    }, MILLISECONDS_TICK);
   }
 
   _verifyUserAnswerClick(evt) {
