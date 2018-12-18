@@ -82,7 +82,7 @@ export default class Adapter {
     });
     return {
       stats,
-      lives: data.restLives,
+      lives: data.restLives >= 0 ? data.restLives : 0,
     };
   }
 
