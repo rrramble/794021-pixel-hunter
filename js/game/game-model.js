@@ -40,7 +40,7 @@ class Level {
         return 0;
       case AnswerState.SLOW:
         return Points.NORMAL + Points.ADDITIONAL_FOR_SLOW_ANSWER;
-      case AnswerState.SPEED:
+      case AnswerState.QUICK:
         return Points.NORMAL + Points.ADDITIONAL_FOR_NORMAL_SPEED_ANSWER;
       default:
         return Points.NORMAL;
@@ -89,21 +89,21 @@ export default class GameModel {
     this.levels.push(level);
   }
 
-  get answersCount() {
+  get correctAnswersCount() {
     return this.levels.reduce((accu, level) => {
       const isCorrect =
-        level.answerState === AnswerState.SLOW ||
+        level.answerState === AnswerState.QUICK ||
         level.answerState === AnswerState.NORMAL ||
-        level.answerState === AnswerState.SPEED;
+        level.answerState === AnswerState.SLOW;
       return isCorrect ? ++accu : accu;
     }, 0);
   }
 
-  get answersScore() {
+  get correctAnswersScore() {
     if (this.isThereUnansweredQuestion()) {
       return 0;
     }
-    return this.answersCount * Points.FOR_CORRECT_ANSWER;
+    return this.correctAnswersCount * Points.FOR_CORRECT_ANSWER;
   }
 
   get currentLevel() {
@@ -167,13 +167,6 @@ export default class GameModel {
     }, 0);
   }
 
-  get normalSpeedAnswersScore() {
-    if (this.isThereUnansweredQuestion()) {
-      return 0;
-    }
-    return this.normalSpeedAnswersCount * Points.ADDITIONAL_FOR_NORMAL_SPEED_ANSWER;
-  }
-
   set questions(questions) {
     this.levels = questions.map((question) => {
       return new Level(question);
@@ -186,7 +179,7 @@ export default class GameModel {
     }, 0);
   }
 
-  get quickAnswersScore() {
+  get quickAnswersAdditionalScore() {
     if (this.isThereUnansweredQuestion()) {
       return 0;
     }
@@ -203,10 +196,9 @@ export default class GameModel {
     if (this.isThereUnansweredQuestion()) {
       return UNANSWERED_QUESTIONS_SCORE;
     }
-    return this.answersScore +
-      this.quickAnswersScore +
-      this.slowAnswersScore +
-      this.normalSpeedAnswersScore +
+    return this.correctAnswersScore +
+      this.quickAnswersAdditionalScore +
+      this.slowAnswersAdditionalScore +
       this.restLivesScore;
   }
 
@@ -224,7 +216,7 @@ export default class GameModel {
     }, 0);
   }
 
-  get slowAnswersScore() {
+  get slowAnswersAdditionalScore() {
     if (this.isThereUnansweredQuestion()) {
       return 0;
     }

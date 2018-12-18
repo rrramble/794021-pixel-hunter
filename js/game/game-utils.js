@@ -6,7 +6,7 @@ export const AnswerState = {
   INCORRECT: 2,
   QUICK: 3,
   NORMAL: 4,
-  SPEED: 5,
+  SLOW: 5,
 };
 
 const PointsForAnswer = {
