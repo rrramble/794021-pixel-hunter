@@ -64,7 +64,7 @@ export default class GameScreen {
 
   _processAnswer(evt) {
     clearTimeout(this._timerID);
-    if (!!evt) {
+    if (evt) {
       this._gameModel.setCurrentLevelAnswer(getAnswers(evt, this._gameModel.currentQuestionImageCount));
     }
     this._gameModel.increaseLevel();
@@ -74,7 +74,7 @@ export default class GameScreen {
     } else {
       this.start(CONTINUE_STARTED_GAME);
     }
-  };
+  }
 
   start(isToBeContinued) {
     if (isToBeContinued) {
@@ -82,12 +82,12 @@ export default class GameScreen {
       this._reinitFieldView();
     } else {
       this._gameModel.reinit();
-    };
+    }
 
     changeWindow(this.elements);
 
     this._timerID = setInterval(() => {
-      this._gameModel.tickSecond()
+      this._gameModel.tickSecond();
     }, MILLISECONDS_TICK);
   }
 

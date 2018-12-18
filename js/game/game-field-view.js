@@ -4,7 +4,7 @@ import AbstractView from '../utils/abstract-view.js';
 import {makeDomNode} from '../utils.js';
 
 import {getFooterScoreIconClassNames} from './game-utils.js';
-import {getFittedSize, makeArray} from '../utils';
+import {getFittedSize} from '../utils.js';
 
 const PlaygroundType = {
   '1': {
@@ -44,7 +44,7 @@ export default class GameView extends AbstractView {
     switch (this._gameData.currentQuestionImageCount) {
       case 1:
         return `${this._templatePlayground1}`;
-    case 2:
+      case 2:
         return `${this._templatePlayground2}`;
       default:
         return `${this._templatePlayground3}`;

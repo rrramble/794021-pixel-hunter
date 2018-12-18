@@ -35,7 +35,7 @@ export const changeWindow = (nodes, shouldPreviousWindowBeSaved) => {
 
 export const replaceNode = (node, index = 0) => {
   getMainNode().children[index].replaceWith(node);
-}
+};
 
 export const enableFormInput = (domNode, shouldBeEnabled) => {
   domNode.disabled = !shouldBeEnabled;
