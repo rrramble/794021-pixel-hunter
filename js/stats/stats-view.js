@@ -104,7 +104,7 @@ export default class GameView extends AbstractView {
             <td></td>
             <td class="result__extra">Штраф за медлительность:</td>
             <td class="result__extra">${gameState.slowAnswersCount} <span class="stats__result stats__result--slow"></span></td>
-            <td class="result__points">× 50</td>
+            <td class="result__points">× -50</td>
             <td class="result__total">${gameState.slowAnswersAdditionalScore}</td>
           </tr>
           <tr>
