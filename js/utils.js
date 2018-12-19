@@ -4,9 +4,7 @@ let mainNode;
 
 export const changeWindow = (nodes, shouldPreviousWindowBeSaved) => {
   if (!shouldPreviousWindowBeSaved) {
-    for (let i = getMainNode().children.length; i--;) {
-      getMainNode().children[i].remove();
-    }
+    getMainNode().innerHTML = ``;
   }
   nodes.forEach((node) => {
     getMainNode().append(node);
