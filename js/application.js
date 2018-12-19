@@ -39,7 +39,7 @@ export default class Application {
   }
 
   static loadImages(urls) {
-    Loader.downloadQuestions(urls).
+    Loader.downloadImages(urls).
       then((result) => {
         images = result;
         Application.showGreeting();

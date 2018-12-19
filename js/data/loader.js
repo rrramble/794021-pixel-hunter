@@ -22,24 +22,19 @@ const makeStatisticsUrl = (template, username) => {
   return `${template}${username}`;
 };
 
-const downloadImage = (url, onError) => {
-  new Promise((resolve, reject) => {
+const downloadImage = (url) => {
+  return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error(url), url, onError);
     img.src = url;
   }).
-    then((img) => img).
-    catch((error, url, onError) => {
-      onError(error.message);
-      downloadImage(url, onError)
-    });
+    then((img) => img);
 };
 
 export default class Loader {
-  static downloadImages(urls, onError) {
+  static downloadImages(urls) {
     return urls.map((url) => {
-      return downloadImage(url, onError);
+      return downloadImage(url);
     });
   }
 
