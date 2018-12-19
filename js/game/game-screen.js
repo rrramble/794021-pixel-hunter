@@ -70,9 +70,8 @@ export default class GameScreen {
     if (this._gameModel.isGameFinished()) {
       Application.showStats(this._gameModel);
       return;
-    } else {
-      this.start(CONTINUE_STARTED_GAME);
     }
+    this.start(CONTINUE_STARTED_GAME);
   }
 
   start(isToBeContinued) {

@@ -7,6 +7,7 @@ const Url = {
   QUESTIONS: `https://es.dump.academy/pixel-hunter/questions`,
   STATISTICS_TEMPLATE: `https://es.dump.academy/pixel-hunter/stats/${APP_ID}-`,
 };
+const RELOADING_TRY_INTERVAL = 10000;
 
 const checkStatus = (response) => {
   if (response.ok) {
@@ -21,8 +22,22 @@ const makeStatisticsUrl = (template, username) => {
   return `${template}${username}`;
 };
 
+const downloadImage = (url) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.src = url;
+  }).
+    then((img) => img);
+};
 
 export default class Loader {
+  static downloadImages(urls) {
+    return urls.map((url) => {
+      return downloadImage(url);
+    });
+  }
+
   static downloadStatistics(username) {
     const url = makeStatisticsUrl(Url.STATISTICS_TEMPLATE, username);
     return window.fetch(url).
@@ -34,7 +49,12 @@ export default class Loader {
     return window.fetch(Url.QUESTIONS).
       then(checkStatus).
       then(getJsonFromResponse).
-      then(Adapter.makeDownloadingLevels);
+      then(
+        (json) => Adapter.makeDownloadingLevels(json),
+        () => {
+          setTimeout(downloadQuestions, RELOADING_TRY_INTERVAL);
+        }
+      );
   }
 
   static uploadStatistic(rawData) {

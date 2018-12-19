@@ -11,36 +11,52 @@ import Adapter from './data/adapter.js';
 import {changeWindow} from './utils.js';
 
 let levels;
-let currentAppIsShowIntro;
+let images;
+
+const getUrlsFromLevels = (levels) => {
+  let accu = [];
+  levels.forEach((level) => {
+    level.answers.forEach((answer) => {
+      accu.push(answer.url);
+    });
+  });
+  return accu;
+};
 
 export default class Application {
   static showIntro() {
-    currentAppIsShowIntro = true;
     const screen = new IntroScreen();
     changeWindow([screen.element]);
+    Application.loadLevels();
+  }
+
+  static loadLevels() {
     Loader.downloadQuestions().
-      then((loadedLevels) => {
-        levels = loadedLevels;
-        if (currentAppIsShowIntro) {
-          this.showGreeting();
-        }
+      then((result) => {
+        levels = result;
+        Application.loadImages(getUrlsFromLevels(levels));
+      });
+  }
+
+  static loadImages(urls) {
+    Loader.downloadImages(urls).
+      then((result) => {
+        images = result;
+        Application.showGreeting();
       });
   }
 
   static showGreeting() {
-    currentAppIsShowIntro = false;
     const screen = new GreetingScreen();
     changeWindow([screen.element]);
   }
 
   static showRules() {
-    currentAppIsShowIntro = false;
     const screen = new RulesScreen();
     changeWindow([screen.element]);
   }
 
   static showGame(userName) {
-    currentAppIsShowIntro = false;
     const model = new GameModel(userName);
     model.setLevels(levels);
     const gameScreen = new GameScreen(model);
@@ -48,7 +64,6 @@ export default class Application {
   }
 
   static showStats(model) {
-    currentAppIsShowIntro = false;
     const screen = new StatsScreen(model);
     changeWindow([screen.element]);
     Loader.downloadStatistics(model.username).
