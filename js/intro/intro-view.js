@@ -1,4 +1,4 @@
-// View class of 'Intro' window
+// View of the 'Intro' window
 
 import AbstractView from '../utils/abstract-view.js';
 import {makeDomNode} from '../utils.js';
@@ -13,21 +13,12 @@ export default class IntroView extends AbstractView {
     super();
   }
 
-  get element() {
-    return this._render();
-  }
-
   set cb(cb) {
     this._cb = cb;
   }
 
-  get template() {
-    return `
-      <section class="intro">
-        <button class="intro__asterisk asterisk" type="button"><span class="visually-hidden">Продолжить</span>*</button>
-        <p class="intro__motto"><sup>*</sup> Это не фото. Это рисунок маслом нидерландского художника-фотореалиста Tjalf Sparnaay.</p>
-      </section>
-    `;
+  get element() {
+    return this._render();
   }
 
   _render() {
@@ -40,6 +31,15 @@ export default class IntroView extends AbstractView {
       }];
     }
     return makeDomNode(this.template, eventListeners);
+  }
+
+  get template() {
+    return `
+      <section class="intro">
+        <button class="intro__asterisk asterisk" type="button"><span class="visually-hidden">Продолжить</span>*</button>
+        <p class="intro__motto"><sup>*</sup> Это не фото. Это рисунок маслом нидерландского художника-фотореалиста Tjalf Sparnaay.</p>
+      </section>
+    `;
   }
 
 }

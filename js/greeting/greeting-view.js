@@ -1,4 +1,4 @@
-// View class of 'Intro' window
+// View of the 'Greeting' window
 
 import AbstractView from '../utils/abstract-view.js';
 import {makeDomNode} from '../utils.js';
@@ -13,12 +13,12 @@ export default class GreetingView extends AbstractView {
     super();
   }
 
-  get element() {
-    return this._render();
-  }
-
   set cb(cb) {
     this._cb = cb;
+  }
+
+  get element() {
+    return this._render();
   }
 
   get template() {

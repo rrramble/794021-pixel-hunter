@@ -17,19 +17,46 @@ const Points = {
 };
 
 class Level {
-  constructor(question) {
-    this.question = question;
+  constructor(level) {
+    if (level) {
+      this.questionText = level.questionText;
+      this.answers = level.answers;
+    }
     this.secondsLeft = MAX_ANSWER_TIME;
     this.answerState = AnswerState.UNANSWERED;
   }
 
   setAnswerState(levelState) {
     this.answerState = levelState.answerState;
-    this.restLives = levelState.restLives;
+  }
+
+  _isAnswerCorrect(choices) {
+    if (!choices) {
+      return false;
+    }
+    switch (this.answers.length) {
+      case 1:
+        return choices[0] === this.answers[0].type;
+      case 2:
+        return choices[0] === this.answers[0].type &&
+          choices[1] === this.answers[1].type;
+      case 3:
+        let types = this.answers.map((answer) => answer.type);
+        types.splice(choices[0], 1);
+        return types[0] === types[1];
+      default:
+        return false;
+    }
   }
 
   get isUnanswered() {
     return this.answerState === AnswerState.UNANSWERED;
+  }
+
+  pushChoices(choices) {
+    const isAnswerCorrect = this._isAnswerCorrect(choices);
+    this._setAnswerCorrectness(isAnswerCorrect);
+    return isAnswerCorrect;
   }
 
   get score() {
@@ -40,14 +67,14 @@ class Level {
         return 0;
       case AnswerState.SLOW:
         return Points.NORMAL + Points.ADDITIONAL_FOR_SLOW_ANSWER;
-      case AnswerState.SPEED:
+      case AnswerState.QUICK:
         return Points.NORMAL + Points.ADDITIONAL_FOR_NORMAL_SPEED_ANSWER;
       default:
         return Points.NORMAL;
     }
   }
 
-  setAnswer(isCorrect) {
+  _setAnswerCorrectness(isCorrect) {
     if (!isCorrect) {
       this.answerState = AnswerState.INCORRECT;
       return;
@@ -78,6 +105,8 @@ export default class GameModel {
   constructor(username) {
     this.username = username;
     this.MAX_LIVES = MAX_LIVES;
+    this.restLives = MAX_LIVES;
+    this.currentLevelNumber = 0;
   }
 
   addAnswerState(answerState) {
@@ -89,36 +118,36 @@ export default class GameModel {
     this.levels.push(level);
   }
 
-  get answersCount() {
+  get correctAnswersCount() {
     return this.levels.reduce((accu, level) => {
       const isCorrect =
-        level.answerState === AnswerState.SLOW ||
+        level.answerState === AnswerState.QUICK ||
         level.answerState === AnswerState.NORMAL ||
-        level.answerState === AnswerState.SPEED;
+        level.answerState === AnswerState.SLOW;
       return isCorrect ? ++accu : accu;
     }, 0);
   }
 
-  get answersScore() {
+  get correctAnswersScore() {
     if (this.isThereUnansweredQuestion()) {
       return 0;
     }
-    return this.answersCount * Points.FOR_CORRECT_ANSWER;
+    return this.correctAnswersCount * Points.FOR_CORRECT_ANSWER;
   }
 
   get currentLevel() {
     return this.levels[this.currentLevelNumber];
   }
 
-  get currentQuestion() {
-    return this.currentLevel.question;
+  get currentAnswers() {
+    return this.currentLevel.answers;
   }
 
-  get currentQuestionImageCount() {
-    return this.currentQuestion.length;
+  get currentAnswersImageCount() {
+    return this.currentAnswers.length;
   }
 
-  get currentQuestionSecondsLeft() {
+  get currentLevelSecondsLeft() {
     return this.currentLevel.secondsLeft;
   }
 
@@ -133,23 +162,9 @@ export default class GameModel {
     return ++this.currentLevelNumber;
   }
 
-  init(timeElapsedCb) {
+  reinit() {
     this.restLives = MAX_LIVES;
     this.currentLevelNumber = 0;
-
-    if (timeElapsedCb) {
-      this._timeElapsedCb = timeElapsedCb;
-    }
-  }
-
-  _isPhotoAnswerCorrect(photoAnswers) {
-    if (!photoAnswers) {
-      return false;
-    }
-    return photoAnswers.every((photoAnswer, index) => {
-      const isPhoto = this.currentQuestion[index].isPhoto;
-      return photoAnswer === isPhoto;
-    });
   }
 
   isGameFinished() {
@@ -167,26 +182,29 @@ export default class GameModel {
     }, 0);
   }
 
-  get normalSpeedAnswersScore() {
-    if (this.isThereUnansweredQuestion()) {
-      return 0;
-    }
-    return this.normalSpeedAnswersCount * Points.ADDITIONAL_FOR_NORMAL_SPEED_ANSWER;
+  onTickSecond() {
   }
 
-  set questions(questions) {
-    this.levels = questions.map((question) => {
-      return new Level(question);
-    });
+  onTimeElapsed() {
+  }
+
+  pushCurrentLevelAnswer(choices) {
+    const isCorrect = this.currentLevel.pushChoices(choices);
+    if (!isCorrect) {
+      this.decreaseLive();
+    }
   }
 
   get quickAnswersCount() {
+    if (this.isThereUnansweredQuestion()) {
+      return 0;
+    }
     return this.levels.reduce((accu, level) => {
       return level.answerState === AnswerState.QUICK ? ++accu : accu;
     }, 0);
   }
 
-  get quickAnswersScore() {
+  get quickAnswersAdditionalScore() {
     if (this.isThereUnansweredQuestion()) {
       return 0;
     }
@@ -203,28 +221,28 @@ export default class GameModel {
     if (this.isThereUnansweredQuestion()) {
       return UNANSWERED_QUESTIONS_SCORE;
     }
-    return this.answersScore +
-      this.quickAnswersScore +
-      this.slowAnswersScore +
-      this.normalSpeedAnswersScore +
+    return this.correctAnswersScore +
+      this.quickAnswersAdditionalScore +
+      this.slowAnswersAdditionalScore +
       this.restLivesScore;
   }
 
-  setCurrentLevelAnswer(answers) {
-    const isCorrect = this._isPhotoAnswerCorrect(answers);
-    this.currentLevel.setAnswer(isCorrect);
-    if (!isCorrect) {
-      this.decreaseLive();
-    }
+  setLevels(levels) {
+    this.levels = levels.map((level) => {
+      return new Level(level);
+    });
   }
 
   get slowAnswersCount() {
+    if (this.isThereUnansweredQuestion()) {
+      return 0;
+    }
     return this.levels.reduce((accu, level) => {
       return level.answerState === AnswerState.SLOW ? ++accu : accu;
     }, 0);
   }
 
-  get slowAnswersScore() {
+  get slowAnswersAdditionalScore() {
     if (this.isThereUnansweredQuestion()) {
       return 0;
     }
@@ -233,8 +251,9 @@ export default class GameModel {
 
   tickSecond() {
     const secondsLeft = this.currentLevel.tickSecond();
-    if (secondsLeft <= 0 && this._timeElapsedCb) {
-      this._timeElapsedCb();
+    this.onTickSecond();
+    if (secondsLeft <= 0) {
+      this.onTimeElapsed();
     }
   }
 

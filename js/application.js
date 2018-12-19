@@ -10,18 +10,17 @@ import Adapter from './data/adapter.js';
 
 import {changeWindow} from './utils.js';
 
-const QUESTIONS_SHOULD_BE_MOCK = false;
-let questions;
+let levels;
 let currentAppIsShowIntro;
 
 export default class Application {
   static showIntro() {
     currentAppIsShowIntro = true;
     const screen = new IntroScreen();
-    changeWindow(screen.element);
-    Loader.downloadQuestions(QUESTIONS_SHOULD_BE_MOCK).
-      then((responseQuestions) => {
-        questions = responseQuestions;
+    changeWindow([screen.element]);
+    Loader.downloadQuestions().
+      then((loadedLevels) => {
+        levels = loadedLevels;
         if (currentAppIsShowIntro) {
           this.showGreeting();
         }
@@ -31,36 +30,36 @@ export default class Application {
   static showGreeting() {
     currentAppIsShowIntro = false;
     const screen = new GreetingScreen();
-    changeWindow(screen.element);
+    changeWindow([screen.element]);
   }
 
   static showRules() {
     currentAppIsShowIntro = false;
     const screen = new RulesScreen();
-    changeWindow(screen.element);
+    changeWindow([screen.element]);
   }
 
   static showGame(userName) {
     currentAppIsShowIntro = false;
     const model = new GameModel(userName);
-    model.questions = questions;
+    model.setLevels(levels);
     const gameScreen = new GameScreen(model);
-    changeWindow(gameScreen.element);
     gameScreen.start();
   }
 
   static showStats(model) {
     currentAppIsShowIntro = false;
     const screen = new StatsScreen(model);
-    changeWindow(screen.element);
+    changeWindow([screen.element]);
     Loader.downloadStatistics(model.username).
       then((statistics) => {
         const models = Adapter.getModelsFromStatistics(statistics);
         screen.addEarlierStatistics(models);
-        changeWindow(screen.element);
+        changeWindow([screen.element]);
       }).
       catch(() => {}).
-      then(() => Loader.uploadStatistic(model));
+      then(() => Loader.uploadStatistic(model)).
+      catch(() => {});
   }
 
 }

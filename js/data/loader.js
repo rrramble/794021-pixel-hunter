@@ -1,7 +1,6 @@
 // Loader (download and upload data)
 
 import Adapter from './adapter.js';
-import mockQuestions from './mock-questions.js';
 
 const APP_ID = `794021`;
 const Url = {
@@ -22,19 +21,8 @@ const makeStatisticsUrl = (template, username) => {
   return `${template}${username}`;
 };
 
-export default class Loader {
-  static downloadQuestions(shouldBeMock) {
-    if (shouldBeMock) {
-      return new Promise((resolve) => {
-        resolve(mockQuestions);
-      });
-    }
-    return window.fetch(Url.QUESTIONS).
-      then(checkStatus).
-      then(getJsonFromResponse).
-      then(Adapter.questions);
-  }
 
+export default class Loader {
   static downloadStatistics(username) {
     const url = makeStatisticsUrl(Url.STATISTICS_TEMPLATE, username);
     return window.fetch(url).
@@ -42,8 +30,15 @@ export default class Loader {
       then(getJsonFromResponse);
   }
 
+  static downloadQuestions() {
+    return window.fetch(Url.QUESTIONS).
+      then(checkStatus).
+      then(getJsonFromResponse).
+      then(Adapter.makeDownloadingLevels);
+  }
+
   static uploadStatistic(rawData) {
-    const data = Adapter.uploadingStatistic(rawData);
+    const data = Adapter.makeUploadingStatistic(rawData);
     const url = makeStatisticsUrl(Url.STATISTICS_TEMPLATE, rawData.username);
     const settings = {
       body: JSON.stringify(data),
@@ -54,4 +49,5 @@ export default class Loader {
     };
     return window.fetch(url, settings);
   }
+
 }

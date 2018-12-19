@@ -6,7 +6,7 @@ export const AnswerState = {
   INCORRECT: 2,
   QUICK: 3,
   NORMAL: 4,
-  SPEED: 5,
+  SLOW: 5,
 };
 
 const PointsForAnswer = {
@@ -14,11 +14,6 @@ const PointsForAnswer = {
   QUICK: 50,
   SLOW: -50,
   REST_LIVE: 50
-};
-
-const IMAGE_TYPE_IS_PHOTO = {
-  'photo': true,
-  'paint': false,
 };
 
 const IconClassName = {
@@ -92,38 +87,36 @@ export const getFooterScoreIconClassNames = (gameData) => {
 };
 
 export const isAnsweredFully = (gameData) => {
-  if (gameData.currentQuestionImageCount === 3) {
+  if (gameData.currentAnswersImageCount === 3) {
     return true;
   }
-  return gameData.currentQuestionImageCount === getCheckedInputsCount();
+  return gameData.currentAnswersImageCount === getCheckedInputsCount();
 };
 
-const getAnswerOf3Image = (evt) => {
-  if (!evt) {
-    return false;
-  }
-  let images = [true, true, true];
-  const index = parseInt(evt.srcElement.id, 10);
-  images[index] = false;
-  return images;
-};
-
-export const getAnswers = (evt, imagesCount) => {
-  if (imagesCount === 3) {
-    return getAnswerOf3Image(evt);
-  }
-
+const getAnswerFrom1Or2Images = () => {
   const checkedNodes = document.querySelectorAll(CHECKED_ANSWERS_INPUT_SELECTOR);
   if (checkedNodes.length <= 0) {
-    return undefined;
+    return null;
   }
   return [...checkedNodes].map((checkedNode) => {
-    return isImageTypePhoto(checkedNode.value);
+    return checkedNode.value;
   });
 };
 
-const isImageTypePhoto = (imageTypeString) => {
-  return IMAGE_TYPE_IS_PHOTO[imageTypeString];
+const getAnswerFrom3Images = (evt) => {
+  if (!evt) {
+    return null;
+  }
+  return [parseInt(evt.srcElement.id, 10)];
+};
+
+export const getAnswers = (evt, imagesCount) => {
+  switch (imagesCount) {
+    case 3:
+      return getAnswerFrom3Images(evt);
+    default:
+      return getAnswerFrom1Or2Images();
+  }
 };
 
 const getCheckedInputsCount = () => {
@@ -133,4 +126,8 @@ const getCheckedInputsCount = () => {
 
 export const isUserNameValid = (name) => {
   return !!name;
+};
+
+export const isRestSecondsOdd = (seconds, base) => {
+  return seconds <= base && seconds % 2 !== 0;
 };

@@ -1,4 +1,4 @@
-// View class of 'Result Statistics' window
+// View of the 'Statistics' window
 
 import AbstractView from '../utils/abstract-view.js';
 import {getFooterScoreIconClassNames} from '../game/game-utils.js';
@@ -36,6 +36,10 @@ export default class GameView extends AbstractView {
 
   onCancelGameClick() {
     return new Error(`Should be redefined 'onCancelGameClick()'`);
+  }
+
+  render() {
+    return makeDomNode(this.template);
   }
 
   get template() {
@@ -84,14 +88,14 @@ export default class GameView extends AbstractView {
               </ul>
             </td>
             <td class="result__points">× 100</td>
-            <td class="result__total">${gameState.answersScore}</td>
+            <td class="result__total">${gameState.correctAnswersScore}</td>
           </tr>
           <tr>
             <td></td>
             <td class="result__extra">Бонус за скорость:</td>
             <td class="result__extra">${gameState.quickAnswersCount} <span class="stats__result stats__result--fast"></span></td>
             <td class="result__points">× 50</td>
-            <td class="result__total">${gameState.quickAnswersScore}</td>
+            <td class="result__total">${gameState.quickAnswersAdditionalScore}</td>
           </tr>
           <tr>
             <td></td>
@@ -104,8 +108,8 @@ export default class GameView extends AbstractView {
             <td></td>
             <td class="result__extra">Штраф за медлительность:</td>
             <td class="result__extra">${gameState.slowAnswersCount} <span class="stats__result stats__result--slow"></span></td>
-            <td class="result__points">× 50</td>
-            <td class="result__total">${gameState.slowAnswersScore}</td>
+            <td class="result__points">× -50</td>
+            <td class="result__total">${gameState.slowAnswersAdditionalScore}</td>
           </tr>
           <tr>
             <td colspan="5" class="result__total  result__total--final">${gameState.score}</td>
@@ -138,10 +142,6 @@ export default class GameView extends AbstractView {
     return this._earlierStatistics.reduce((accu, oneGameLevels, index) => {
       return `${accu}${this._templateBodyEarlierStatistic(oneGameLevels, index + 1)}`;
     }, ``);
-  }
-
-  render() {
-    return makeDomNode(this.template);
   }
 
 }

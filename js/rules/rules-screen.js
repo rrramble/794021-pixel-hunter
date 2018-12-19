@@ -1,4 +1,4 @@
-// 'Rules' presenter
+// Presenter of the 'Rules' window
 
 import View from './rules-view.js';
 import Application from '../application.js';
