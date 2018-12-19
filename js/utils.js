@@ -59,10 +59,7 @@ export const isInRange = (value, min, max) => {
 };
 
 export const makeArray = (count) => {
-  if (count <= 0) {
-    return [];
-  }
-  return new Array(count);
+  return count > 0 ? new Array(count) : [];
 };
 
 export const makeDomNode = (innerHtml, eventListeners) => {

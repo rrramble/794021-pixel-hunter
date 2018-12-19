@@ -92,10 +92,7 @@ class Level {
   }
 
   tickSecond() {
-    if (this.secondsLeft >= 0) {
-      return --this.secondsLeft;
-    }
-    return 0;
+    return this.secondsLeft >= 0 ? --this.secondsLeft : 0;
   }
 
 } // Level
@@ -129,10 +126,9 @@ export default class GameModel {
   }
 
   get correctAnswersScore() {
-    if (this.isThereUnansweredQuestion()) {
-      return 0;
-    }
-    return this.correctAnswersCount * Points.FOR_CORRECT_ANSWER;
+    return this.isThereUnansweredQuestion() ?
+      0 :
+      this.correctAnswersCount * Points.FOR_CORRECT_ANSWER;
   }
 
   get currentLevel() {
@@ -152,10 +148,7 @@ export default class GameModel {
   }
 
   decreaseLive() {
-    if (this.restLives >= 0) {
-      --this.restLives;
-    }
-    return this.restLives;
+    return this.restLives >= 0 ? --this.restLives : this.restLives;
   }
 
   increaseLevel() {
@@ -205,26 +198,24 @@ export default class GameModel {
   }
 
   get quickAnswersAdditionalScore() {
-    if (this.isThereUnansweredQuestion()) {
-      return 0;
-    }
-    return this.quickAnswersCount * Points.ADDITIONAL_FOR_QUICK_ANSWER;
+    return this.isThereUnansweredQuestion() ?
+      0 :
+      this.quickAnswersCount * Points.ADDITIONAL_FOR_QUICK_ANSWER;
   }
 
   get restLivesScore() {
-    return this.restLives >= 0 ?
-      this.restLives * Points.REST_LIVE_SCORE :
-      0;
+    return this.restLives <= 0 ?
+      0 :
+      this.restLives * Points.REST_LIVE_SCORE;
   }
 
   get score() {
-    if (this.isThereUnansweredQuestion()) {
-      return UNANSWERED_QUESTIONS_SCORE;
-    }
-    return this.correctAnswersScore +
-      this.quickAnswersAdditionalScore +
-      this.slowAnswersAdditionalScore +
-      this.restLivesScore;
+    return this.isThereUnansweredQuestion() ?
+      UNANSWERED_QUESTIONS_SCORE :
+      this.correctAnswersScore +
+        this.quickAnswersAdditionalScore +
+        this.slowAnswersAdditionalScore +
+        this.restLivesScore;
   }
 
   setLevels(levels) {
@@ -243,10 +234,9 @@ export default class GameModel {
   }
 
   get slowAnswersAdditionalScore() {
-    if (this.isThereUnansweredQuestion()) {
-      return 0;
-    }
-    return this.slowAnswersCount * Points.ADDITIONAL_FOR_SLOW_ANSWER;
+    return this.isThereUnansweredQuestion() ?
+      0 :
+      this.slowAnswersCount * Points.ADDITIONAL_FOR_SLOW_ANSWER;
   }
 
   tickSecond() {
@@ -258,4 +248,3 @@ export default class GameModel {
   }
 
 }
-
