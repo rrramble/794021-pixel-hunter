@@ -4,7 +4,7 @@ import GameHeaderView from './game-header-view.js';
 import GameFieldView from './game-field-view.js';
 
 import Application from '../application.js';
-import {changeWindow, replaceNode, getCountInputsChecked, isAnsweredYes} from '../utils.js';
+import {changeWindow, replaceChildNode, getCountInputsChecked, isAnsweredYes} from '../utils.js';
 import {getAnswers} from './game-utils.js';
 
 const CONTINUE_STARTED_GAME = true;
@@ -21,7 +21,7 @@ export default class GameScreen {
 
     this._gameModel.onTickSecond = () => {
       this._headerView.updateTime();
-      replaceNode(this._headerView.element, 0);
+      replaceChildNode(this._headerView.element, 0);
     };
 
     this._gameModel.onTimeElapsed = () => {

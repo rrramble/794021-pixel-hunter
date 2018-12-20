@@ -75,6 +75,6 @@ export const makeDomNode = (innerHtml, eventListeners) => {
   return node;
 };
 
-export const replaceNode = (node, index = 0) => {
+export const replaceChildNode = (node, index = 0) => {
   getMainNode().children[index].replaceWith(node);
 };
