@@ -8,11 +8,14 @@ import GameModel from './game/game-model.js';
 import Loader from './data/loader.js';
 import Adapter from './data/adapter.js';
 import GameData from './data/game-data';
+import ErrorView from './utils/error-view.js';
+
 import {changeWindow} from './utils.js';
 
-const RELOADING_TRY_INTERVAL = 10000;
+const RELOADING_TRY_INTERVAL = 1000;
 
 const gameData = new GameData();
+const errorView = new ErrorView();
 
 export default class Application {
   static showIntro() {
@@ -22,33 +25,27 @@ export default class Application {
   }
 
   static loadLevels() {
-    try {
-      Loader.downloadQuestions().
-        then((result) => {
-          gameData.levels = result;
-          Application.loadImages();
-        }).
-        catch(() => {
-          return new Promise(() => setTimeout(Application.loadLevels, RELOADING_TRY_INTERVAL));
-        });
-    } catch (err) {
-      setTimeout(Application.loadLevels, RELOADING_TRY_INTERVAL);
-    }
+    Loader.fetchQuestions(errorView.start).
+      then((result) => {
+        gameData.levels = result;
+        Application.loadImages();
+      }).
+      catch((err) => {
+        errorView.start(err.message);
+        return new Promise(() => setTimeout(Application.loadLevels, RELOADING_TRY_INTERVAL));
+      });
   }
 
   static loadImages() {
-    try {
-      Loader.downloadImages(gameData.urls).
-        then((result) => {
-          gameData.images = result;
-          Application.showGreeting();
-        }).
-        catch(() => {
-          return new Promise(() => setTimeout(Application.loadImages, RELOADING_TRY_INTERVAL));
-        });
-    } catch (err) {
-      setTimeout(Application.loadImages, RELOADING_TRY_INTERVAL);
-    }
+    Loader.fetchImages(gameData.urls).
+      then((result) => {
+        gameData.images = result;
+        Application.showGreeting();
+      }).
+      catch((err) => {
+        errorView.start(err.message);
+        setTimeout(Application.loadImages, RELOADING_TRY_INTERVAL);
+      });
   }
 
   static showGreeting() {

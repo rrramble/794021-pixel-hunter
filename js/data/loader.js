@@ -21,20 +21,28 @@ const makeStatisticsUrl = (template, username) => {
   return `${template}${username}`;
 };
 
-const downloadImage = (url) => {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.src = url;
-  }).
-    then((img) => img);
+const fetchImage = (url) => {
+  try {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error(`Error loading "${img.src}"`));
+      img.src = url;
+    });
+  } catch (err) {
+    throw new Error(err.message);
+    return Promise.reject(new Error(`Error fetching images`));
+  };
 };
 
 export default class Loader {
-  static downloadImages(urls) {
-    return Promise.all(urls.map((url) => {
-      return downloadImage(url);
-    }));
+  static fetchImages(urls) {
+    try {
+      return Promise.all(urls.map(fetchImage)).
+        then((result) => result);
+    } catch (err) {
+      return Promise.reject(new Error(`Error fetching images`));
+    }
   }
 
   static downloadStatistics(username) {
@@ -44,11 +52,18 @@ export default class Loader {
       then(getJsonFromResponse);
   }
 
-  static downloadQuestions() {
-    return window.fetch(Url.QUESTIONS).
-      then(checkStatus).
-      then(getJsonFromResponse).
-      then((json) => Adapter.makeDownloadingLevels(json));
+  static fetchQuestions(onError) {
+    try {
+      return window.fetch(Url.QUESTIONS).
+        then(checkStatus).
+        then(getJsonFromResponse).
+        then((json) => Adapter.makeDownloadingLevels(json)).
+        catch((err) => onError(err.message));
+    } catch (err) {
+      return new Promise(() => {
+        throw new Error(err.message);
+      });
+    }
   }
 
   static uploadStatistic(rawData) {
