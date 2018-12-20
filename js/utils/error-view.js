@@ -1,7 +1,7 @@
-// View of an Error window
+// View of 'Error' window
 
 import AbstractView from './abstract-view.js';
-import {changeWindow, removeSelector} from '../utils.js';
+import {changeWindow} from '../utils.js';
 
 export default class ErrorView extends AbstractView {
   constructor() {
