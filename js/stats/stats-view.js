@@ -28,23 +28,12 @@ export default class GameView extends AbstractView {
     return node;
   }
 
-  get element() {
-    if (!this._element) {
-      this._element = this.bind(this.render());
-    }
-    return this._element;
-  }
-
   onAnswerClick() {
     return new Error(`Should be redefined 'onAnswerClick()'`);
   }
 
   onCancelGameClick() {
     return new Error(`Should be redefined 'onCancelGameClick()'`);
-  }
-
-  render() {
-    return makeDomNode(this.template);
   }
 
   get template() {
