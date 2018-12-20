@@ -50,10 +50,6 @@ export const hasEventTargetClassName = (evt, className) => {
   return hasNodeClassName(evt.target);
 };
 
-export const isAnsweredYes = (text) => {
-  return !!text;
-};
-
 export const isInRange = (value, min, max) => {
   return value >= min && value < max;
 };
@@ -77,4 +73,9 @@ export const makeDomNode = (innerHtml, eventListeners) => {
 
 export const replaceChildNode = (node, index = 0) => {
   getMainNode().children[index].replaceWith(node);
+};
+
+export const removeLastNode = () => {
+  const node = getMainNode();
+  node.removeChild(node.lastChild);
 };
