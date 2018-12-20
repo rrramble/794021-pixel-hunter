@@ -8,14 +8,6 @@ export default class IntroView extends AbstractView {
     super();
   }
 
-  get element() {
-    return this._render();
-  }
-
-  _render() {
-    return makeDomNode(this.template);
-  }
-
   get template() {
     return `
       <section class="intro">
