@@ -1,7 +1,6 @@
 // View class of 'Rules' window
 
 import AbstractView from '../utils/abstract-view.js';
-import {makeDomNode} from '../utils.js';
 
 import {getFooterScoreIconClassNames} from './game-utils.js';
 import {getFittedSize} from '../utils.js';

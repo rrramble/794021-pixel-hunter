@@ -2,7 +2,6 @@
 
 import AbstractView from '../utils/abstract-view.js';
 import {getFooterScoreIconClassNames} from '../game/game-utils.js';
-import {makeDomNode} from '../utils.js';
 
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
 
