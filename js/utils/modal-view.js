@@ -1,4 +1,4 @@
-// Универсальный экран 'View'
+// View of a Modal window
 
 import AbstractView from './abstract-view.js';
 
