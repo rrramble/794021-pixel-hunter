@@ -62,17 +62,17 @@ export default class Application {
   }
 
   static showGame(userName) {
-    const model = new GameModel(userName);
-    model.setLevels(gameData.levels);
-    model.setImages(gameData.images);
-    const gameScreen = new GameScreen(model);
+    gameData.model = new GameModel(userName);
+    gameData.model.setLevels(gameData.levels);
+    gameData.model.setImages(gameData.images);
+    const gameScreen = new GameScreen(gameData.model);
     gameScreen.start();
   }
 
   static showStats(model) {
-    const screen = new StatsScreen(model);
+    const screen = new StatsScreen(gameData.model);
     changeWindow([screen.element]);
-    Loader.downloadStatistics(model.username).
+    Loader.downloadStatistics(gameData.model.username).
       then((statistics) => {
         const models = Adapter.getModelsFromStatistics(statistics);
         screen.addEarlierStatistics(models);
