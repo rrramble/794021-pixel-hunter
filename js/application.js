@@ -64,6 +64,7 @@ export default class Application {
   static showGame(userName) {
     const model = new GameModel(userName);
     model.setLevels(gameData.levels);
+    model.setImages(gameData.images);
     const gameScreen = new GameScreen(model);
     gameScreen.start();
   }

@@ -24,8 +24,4 @@ export default class GameData {
     return this._urls;
   }
 
-  set images(data) {
-    this._images = data;
-  }
-
 }
