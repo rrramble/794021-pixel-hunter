@@ -2,6 +2,7 @@
 
 import Adapter from './adapter.js';
 
+
 const APP_ID = `794021`;
 const Url = {
   QUESTIONS: `https://es.dump.academy/pixel-hunter/questions`,

@@ -6,6 +6,11 @@ import {makeDomNode} from '../utils.js';
 
 const PREVIOUS_BUTTON_SELECTOR = `.back`;
 
+const getPresentationScoreFromScore = (score) => {
+  return score > 0 ? score : `fail`;
+};
+
+
 export default class GameView extends AbstractView {
   constructor(gameData) {
     super(gameData);
@@ -112,27 +117,26 @@ export default class GameView extends AbstractView {
             <td class="result__total">${gameState.slowAnswersAdditionalScore}</td>
           </tr>
           <tr>
-            <td colspan="5" class="result__total  result__total--final">${gameState.score}</td>
+            <td colspan="5" class="result__total  result__total--final">${getPresentationScoreFromScore(gameState.score)}</td>
           </tr>
         </table>
     `;
   }
 
-  _templateBodyEarlierStatistic(oneGame, index) {
-    const score = oneGame.score;
+  _templateBodyEarlierStatistic(gameState, index) {
     return `
         <table class="result__table">
           <tr>
             <td class="result__number">${index}.</td>
             <td>
               <ul class="stats">
-                ${getFooterScoreIconClassNames(oneGame).map((className) => `
+                ${getFooterScoreIconClassNames(gameState).map((className) => `
                   <li class="stats__result ${className}"></li>
                 `).join(``)}
               </ul>
             </td>
             <td class="result__total"></td>
-            <td class="result__total  result__total--final">${score > 0 ? score : `fail`}</td>
+            <td class="result__total  result__total--final">${getPresentationScoreFromScore(gameState.score)}</td>
           </tr>
         </table>
     `;

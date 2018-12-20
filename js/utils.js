@@ -4,9 +4,7 @@ let mainNode;
 
 export const changeWindow = (nodes, shouldPreviousWindowBeSaved) => {
   if (!shouldPreviousWindowBeSaved) {
-    for (let i = getMainNode().children.length; i--;) {
-      getMainNode().children[i].remove();
-    }
+    getMainNode().innerHTML = ``;
   }
   nodes.forEach((node) => {
     getMainNode().append(node);
@@ -61,10 +59,7 @@ export const isInRange = (value, min, max) => {
 };
 
 export const makeArray = (count) => {
-  if (count <= 0) {
-    return [];
-  }
-  return new Array(count);
+  return count > 0 ? new Array(count) : [];
 };
 
 export const makeDomNode = (innerHtml, eventListeners) => {

@@ -4,6 +4,7 @@ import RulesScreen from './rules/rules-screen.js';
 import GameScreen from './game/game-screen.js';
 import StatsScreen from './stats/stats-screen.js';
 
+
 import GameModel from './game/game-model.js';
 import Loader from './data/loader.js';
 import Adapter from './data/adapter.js';
