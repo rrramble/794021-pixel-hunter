@@ -30,9 +30,8 @@ const fetchImage = (url) => {
       img.src = url;
     });
   } catch (err) {
-    throw new Error(err.message);
     return Promise.reject(new Error(`Error fetching images`));
-  };
+  }
 };
 
 export default class Loader {

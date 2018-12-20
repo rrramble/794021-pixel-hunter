@@ -32,7 +32,7 @@ export default class Application {
       }).
       catch((err) => {
         errorView.start(err.message);
-        return new Promise(() => setTimeout(Application.loadLevels, RELOADING_TRY_INTERVAL));
+        setTimeout(Application.loadLevels, RELOADING_TRY_INTERVAL);
       });
   }
 
