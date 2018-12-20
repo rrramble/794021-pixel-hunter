@@ -79,3 +79,10 @@ export const removeLastNode = () => {
   const node = getMainNode();
   node.removeChild(node.lastChild);
 };
+
+export const removeSelector = (selector) => {
+  const node = document.querySelector(selector);
+  if (node) {
+    node.parentElement.removeChild(node);
+  }
+};
