@@ -74,6 +74,19 @@ class Level {
     }
   }
 
+  setImages(images) {
+    this.answers.forEach((answer) => {
+      const index = images.findIndex((image) => {
+        return image.src === answer.url;
+      });
+      if (index < 0) {
+        return;
+      }
+      answer.width = images[index].width;
+      answer.height = images[index].height;
+    });
+  }
+
   _setAnswerCorrectness(isCorrect) {
     if (!isCorrect) {
       this.answerState = AnswerState.INCORRECT;
@@ -216,6 +229,12 @@ export default class GameModel {
         this.quickAnswersAdditionalScore +
         this.slowAnswersAdditionalScore +
         this.restLivesScore;
+  }
+
+  setImages(images) {
+    this.levels.forEach((level) => {
+      level.setImages(images);
+    });
   }
 
   setLevels(levels) {

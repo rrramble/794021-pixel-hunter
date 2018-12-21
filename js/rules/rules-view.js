@@ -1,7 +1,6 @@
 // View of the 'Rules' window
 
 import AbstractView from '../utils/abstract-view.js';
-import {makeDomNode} from '../utils.js';
 
 const EventListeners = [{
   SELECTOR: `.back`,
@@ -23,25 +22,17 @@ export default class RulesView extends AbstractView {
     this._cbs = cbs;
   }
 
-  get element() {
-    return this._render();
-  }
+  bind(node) {
+    node.querySelector(EventListeners[0].SELECTOR).
+      addEventListener(EventListeners[0].TYPE, this.onBackScreenSelect);
 
-  _render() {
-    const eventListeners = [{
-      selector: EventListeners[0].SELECTOR,
-      type: EventListeners[0].TYPE,
-      cb: this.onBackScreenSelect,
-    }, {
-      selector: EventListeners[1].SELECTOR,
-      type: EventListeners[1].TYPE,
-      cb: this.onUsernameInput,
-    }, {
-      selector: EventListeners[2].SELECTOR,
-      type: EventListeners[2].TYPE,
-      cb: this.onSendUsername,
-    }];
-    return makeDomNode(this.template, eventListeners);
+    node.querySelector(EventListeners[1].SELECTOR).
+      addEventListener(EventListeners[1].TYPE, this.onUsernameInput);
+
+    node.querySelector(EventListeners[2].SELECTOR).
+      addEventListener(EventListeners[2].TYPE, this.onSendUsername);
+
+    return node;
   }
 
   get template() {

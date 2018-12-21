@@ -4,55 +4,72 @@ import RulesScreen from './rules/rules-screen.js';
 import GameScreen from './game/game-screen.js';
 import StatsScreen from './stats/stats-screen.js';
 
-
 import GameModel from './game/game-model.js';
 import Loader from './data/loader.js';
 import Adapter from './data/adapter.js';
+import GameData from './data/game-data';
+import ErrorView from './utils/error-view.js';
 
 import {changeWindow} from './utils.js';
 
-let levels;
-let currentAppIsShowIntro;
+const RELOADING_TRY_INTERVAL = 1000;
+
+const gameData = new GameData();
+const errorView = new ErrorView();
 
 export default class Application {
   static showIntro() {
-    currentAppIsShowIntro = true;
     const screen = new IntroScreen();
     changeWindow([screen.element]);
-    Loader.downloadQuestions().
-      then((loadedLevels) => {
-        levels = loadedLevels;
-        if (currentAppIsShowIntro) {
-          this.showGreeting();
-        }
+    Application.loadLevels();
+  }
+
+  static loadLevels() {
+    Loader.fetchQuestions(errorView.start).
+      then((result) => {
+        gameData.levels = result;
+        Application.loadImages();
+      }).
+      catch((err) => {
+        errorView.start(err.message);
+        setTimeout(Application.loadLevels, RELOADING_TRY_INTERVAL);
+      });
+  }
+
+  static loadImages() {
+    Loader.fetchImages(gameData.urls).
+      then((result) => {
+        gameData.images = result;
+        Application.showGreeting();
+      }).
+      catch((err) => {
+        errorView.start(err.message);
+        setTimeout(Application.loadImages, RELOADING_TRY_INTERVAL);
       });
   }
 
   static showGreeting() {
-    currentAppIsShowIntro = false;
     const screen = new GreetingScreen();
     changeWindow([screen.element]);
   }
 
   static showRules() {
-    currentAppIsShowIntro = false;
     const screen = new RulesScreen();
     changeWindow([screen.element]);
   }
 
   static showGame(userName) {
-    currentAppIsShowIntro = false;
-    const model = new GameModel(userName);
-    model.setLevels(levels);
-    const gameScreen = new GameScreen(model);
+    gameData.model = new GameModel(userName);
+    gameData.model.setLevels(gameData.levels);
+    gameData.model.setImages(gameData.images);
+    const gameScreen = new GameScreen(gameData.model);
     gameScreen.start();
   }
 
   static showStats(model) {
-    currentAppIsShowIntro = false;
-    const screen = new StatsScreen(model);
+    const screen = new StatsScreen(gameData.model);
     changeWindow([screen.element]);
-    Loader.downloadStatistics(model.username).
+    Loader.downloadStatistics(gameData.model.username).
       then((statistics) => {
         const models = Adapter.getModelsFromStatistics(statistics);
         screen.addEarlierStatistics(models);
