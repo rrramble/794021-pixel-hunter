@@ -21,47 +21,56 @@ const makeStatisticsUrl = (template, username) => {
   return `${template}${username}`;
 };
 
-const fetchImage = (url) => {
+const fetchImage = (url, onError) => {
   try {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve(img);
       img.onerror = () => reject(new Error(`Error loading "${img.src}"`));
       img.src = url;
-    });
+    }).
+      then((img) => img).
+      catch((err) => {
+        onError(err.message);
+        return fetchImage(url, onError);
+      });
   } catch (err) {
-    return Promise.reject(new Error(`Error fetching images`));
+    return Promise.reject(new Error(`Error fetching image ${img.src}`));
   }
 };
 
 export default class Loader {
-  static fetchImages(urls) {
+  static fetchImages(urls, onError) {
+    const resultPromise = Promise.all(urls.map((url) => {
+      return fetchImage(url, onError);
+    }));
+
     try {
-      return Promise.all(urls.map(fetchImage)).
+      return resultPromise.
         then((result) => result);
     } catch (err) {
       return Promise.reject(new Error(`Error fetching images`));
     }
   }
 
-  static downloadStatistics(username) {
+  static fetchStatistics(username) {
     const url = makeStatisticsUrl(Url.STATISTICS_TEMPLATE, username);
     return window.fetch(url).
       then(checkStatus).
       then(getJsonFromResponse);
   }
 
-  static fetchQuestions(onError) {
+  static fetchQuestions() {
     try {
       return window.fetch(Url.QUESTIONS).
         then(checkStatus).
         then(getJsonFromResponse).
         then((json) => Adapter.makeDownloadingLevels(json)).
-        catch((err) => onError(err.message));
+        catch(() => {
+          throw new Error(`Failed to fetch questions from "${Url.QUESTIONS}"`)
+        });
     } catch (err) {
-      return new Promise(() => {
-        throw new Error(err.message);
-      });
+      return Promise.reject(() => new Error(`Failed to fetch questions from "${Url.QUESTIONS}"`));
     }
   }
 

@@ -37,7 +37,7 @@ export default class Application {
   }
 
   static loadImages() {
-    Loader.fetchImages(gameData.urls).
+    Loader.fetchImages(gameData.urls, errorView.start).
       then((result) => {
         gameData.images = result;
         Application.showGreeting();
@@ -69,15 +69,15 @@ export default class Application {
   static showStats(model) {
     const screen = new StatsScreen(gameData.model);
     changeWindow([screen.element]);
-    Loader.downloadStatistics(gameData.model.username).
+    Loader.fetchStatistics(gameData.model.username).
       then((statistics) => {
         const models = Adapter.getModelsFromStatistics(statistics);
         screen.addEarlierStatistics(models);
         changeWindow([screen.element]);
       }).
-      catch(() => {}).
+      catch(() => errorView.start(`Cannot download statistics for user: ${gameData.model.username}`), 300).
       then(() => Loader.uploadStatistic(model)).
-      catch(() => {});
+      catch(() => errorView.start(`Error uploading statistics for user: ${gameData.model.username}`, 300));
   }
 
 }
