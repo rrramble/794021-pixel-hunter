@@ -1,6 +1,7 @@
 // View of a Modal window
 
 import AbstractView from './abstract-view.js';
+import {removeSelector} from '../utils.js';
 
 const EventListeners = [{
   SELECTOR: `.modal__close`,
@@ -29,6 +30,10 @@ export default class ModalView extends AbstractView {
       addEventListener(EventListeners[2].TYPE, this.onCancel);
 
     return node;
+  }
+
+  clear() {
+    removeSelector(`.modal`);
   }
 
   onOk() {
