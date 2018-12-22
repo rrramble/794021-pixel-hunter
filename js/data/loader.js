@@ -67,7 +67,7 @@ export default class Loader {
         then(getJsonFromResponse).
         then((json) => Adapter.makeDownloadingLevels(json)).
         catch(() => {
-          throw new Error(`Failed to fetch questions from "${Url.QUESTIONS}"`)
+          throw new Error(`Failed to fetch questions from "${Url.QUESTIONS}"`);
         });
     } catch (err) {
       return Promise.reject(() => new Error(`Failed to fetch questions from "${Url.QUESTIONS}"`));
