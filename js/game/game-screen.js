@@ -2,14 +2,15 @@
 
 import GameHeaderView from './game-header-view.js';
 import GameFieldView from './game-field-view.js';
+import ModalView from '../utils/modal-view.js';
 
 import Application from '../application.js';
-import {changeWindow, replaceNode, getCountInputsChecked, isAnsweredYes} from '../utils.js';
+import {changeWindow, replaceChildNode, getCountInputsChecked,
+  removeLastNode} from '../utils.js';
 import {getAnswers} from './game-utils.js';
 
 const CONTINUE_STARTED_GAME = true;
 const MILLISECONDS_TICK = 1000;
-const GAME_CANCELLING_CONFIRMATION_TEXT = `Вы уверены что хотите начать игру заново и сбросить результаты?`;
 const INPUTS_SELECTOR = `.game__content .game__option input`;
 
 export default class GameScreen {
@@ -21,7 +22,7 @@ export default class GameScreen {
 
     this._gameModel.onTickSecond = () => {
       this._headerView.updateTime();
-      replaceNode(this._headerView.element, 0);
+      replaceChildNode(this._headerView.element, 0);
     };
 
     this._gameModel.onTimeElapsed = () => {
@@ -45,10 +46,13 @@ export default class GameScreen {
   }
 
   _confirmCancellingGame() {
-    if (isAnsweredYes(GAME_CANCELLING_CONFIRMATION_TEXT)) {
+    const modalView = new ModalView();
+    modalView.onOk = () => {
       clearTimeout(this._timerID);
       Application.showGreeting();
-    }
+    };
+    modalView.onCancel = () => removeLastNode();
+    changeWindow([modalView.element], true);
   }
 
   get elements() {

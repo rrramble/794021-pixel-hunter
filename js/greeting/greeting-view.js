@@ -1,7 +1,6 @@
 // View of the 'Greeting' window
 
 import AbstractView from '../utils/abstract-view.js';
-import {makeDomNode} from '../utils.js';
 
 const EventListener = {
   SELECTOR: `.greeting__continue`,
@@ -15,10 +14,6 @@ export default class GreetingView extends AbstractView {
 
   set cb(cb) {
     this._cb = cb;
-  }
-
-  get element() {
-    return this._render();
   }
 
   get template() {
@@ -46,16 +41,12 @@ export default class GreetingView extends AbstractView {
     `;
   }
 
-  _render() {
-    let eventListeners;
+  bind(node) {
     if (this._cb) {
-      eventListeners = [{
-        selector: EventListener.SELECTOR,
-        type: EventListener.TYPE,
-        cb: this._cb,
-      }];
+      const subNode = node.querySelector(EventListener.SELECTOR);
+      subNode.addEventListener(EventListener.TYPE, this._cb);
     }
-    return makeDomNode(this.template, eventListeners);
+    return node;
   }
 
 }

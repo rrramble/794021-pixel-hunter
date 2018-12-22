@@ -1,25 +1,28 @@
 // Универсальный экран 'View'
 
+import {makeDomNode} from '../utils.js';
+
 export default class AbstractView {
   constructor() {
   }
 
-  bind() {
+  bind(node) {
+    return node;
   }
 
   get element() {
     if (!this._element) {
-      this._element = this.render(this.template);
-      this._element = this.bind(this._element);
+      this._element = this.bind(this.render());
     }
     return this._element;
   }
 
-  get template() {
-    throw new Error(`The method should be overriden.`);
+  render() {
+    return makeDomNode(this.template);
   }
 
-  render() {
+  get template() {
+    throw new Error(`The method should be overriden.`);
   }
 
 }

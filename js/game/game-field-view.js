@@ -1,7 +1,6 @@
 // View class of 'Rules' window
 
 import AbstractView from '../utils/abstract-view.js';
-import {makeDomNode} from '../utils.js';
 
 import {getFooterScoreIconClassNames} from './game-utils.js';
 import {getFittedSize} from '../utils.js';
@@ -131,23 +130,12 @@ export default class GameView extends AbstractView {
   `;
   }
 
-  render() {
-    return makeDomNode(this.template);
-  }
-
   bind(node) {
     const eventNodes = node.querySelectorAll(this._settings.HTML_SELECTOR);
     [...eventNodes].forEach((eventNode) => {
       eventNode.addEventListener(this._settings.EVENT_TYPE, this.onAnswerClick);
     });
     return node;
-  }
-
-  get element() {
-    if (!this._element) {
-      this._element = this.bind(this.render());
-    }
-    return this._element;
   }
 
   onAnswerClick() {
