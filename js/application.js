@@ -10,9 +10,10 @@ import Adapter from './data/adapter.js';
 import GameData from './data/game-data';
 import ErrorView from './utils/error-view.js';
 
-import {changeWindow} from './utils.js';
+import {changeWindow, changeWindowDelayDeletionPrevious} from './utils.js';
 
 const RELOADING_TRY_INTERVAL = 1000;
+const DELAY_CLOSING_PREVIOUS_SCREEN = 3000;
 
 const gameData = new GameData();
 const errorView = new ErrorView();
@@ -50,7 +51,7 @@ export default class Application {
 
   static showGreeting() {
     const screen = new GreetingScreen();
-    changeWindow([screen.element]);
+    changeWindowDelayDeletionPrevious([screen.element], DELAY_CLOSING_PREVIOUS_SCREEN);
   }
 
   static showRules() {
