@@ -18,7 +18,7 @@ const checkStatus = (response) => {
 const getJsonFromResponse = (response) => response.json();
 
 const makeStatisticsUrl = (template, username) => {
-  return `${template}${username}`;
+  return encodeURI(`${template}${username}`);
 };
 
 const fetchImage = (url, onError) => {
