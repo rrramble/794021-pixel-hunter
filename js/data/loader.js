@@ -35,7 +35,7 @@ const fetchImage = (url, onError) => {
         return fetchImage(url, onError);
       });
   } catch (err) {
-    return Promise.reject(new Error(`Error fetching image ${img.src}`));
+    return Promise.reject(new Error(`Error fetching image ${url}`));
   }
 };
 
