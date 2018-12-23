@@ -115,7 +115,7 @@ export default class GameView extends AbstractView {
     return `
         <table class="result__table">
           <tr>
-            <td class="result__number">${index}.</td>
+            <td class="result__number">${index + 1}.</td>
             <td>
               <ul class="stats">
                 ${getFooterScoreIconClassNames(gameState).map((className) => `

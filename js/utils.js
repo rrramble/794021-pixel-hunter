@@ -11,6 +11,19 @@ export const changeWindow = (nodes, shouldPreviousWindowBeSaved) => {
   });
 };
 
+export const changeWindowDelayDeletionPrevious = (nodes, delay) => {
+  const previousNodes = [...getMainNode().children];
+  nodes.forEach((node) => {
+    getMainNode().append(node);
+  });
+
+  setTimeout(() => {
+    previousNodes.forEach((node) => {
+      node.remove();
+    });
+  }, delay);
+};
+
 export const enableFormInput = (domNode, shouldBeEnabled) => {
   domNode.disabled = !shouldBeEnabled;
 };
@@ -73,11 +86,6 @@ export const makeDomNode = (innerHtml, eventListeners) => {
 
 export const replaceChildNode = (node, index = 0) => {
   getMainNode().children[index].replaceWith(node);
-};
-
-export const removeLastNode = () => {
-  const node = getMainNode();
-  node.removeChild(node.lastChild);
 };
 
 export const removeSelector = (selector) => {

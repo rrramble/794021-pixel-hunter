@@ -1,6 +1,7 @@
 // View of the 'Greeting' window
 
 import AbstractView from '../utils/abstract-view.js';
+const FADE_IN_MILLISECONDS = 3000;
 
 const EventListener = {
   SELECTOR: `.greeting__continue`,
@@ -18,6 +19,35 @@ export default class GreetingView extends AbstractView {
 
   get template() {
     return `
+    <style>
+      .central--blur {
+        animation: fadeIn ${FADE_IN_MILLISECONDS}ms;
+        position: absolute;
+        top: 30px;
+        z-index: 2;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          position: absolute;
+          top: 30px;
+        }
+        1% {
+          position: absolute;
+          top: 30px;
+        }
+        99% {
+          opacity: 1;
+          position: absolute;
+          top: 30px;
+        }
+        to {
+          opacity: 1;
+          position: absolute;
+          top: 30px;
+        }
+      }
+    </style>
     <section class="greeting central--blur">
       <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
       <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>

@@ -5,8 +5,7 @@ import GameFieldView from './game-field-view.js';
 import ModalView from '../utils/modal-view.js';
 
 import Application from '../application.js';
-import {changeWindow, replaceChildNode, getCountInputsChecked,
-  removeLastNode} from '../utils.js';
+import {changeWindow, replaceChildNode, getCountInputsChecked} from '../utils.js';
 import {getAnswers} from './game-utils.js';
 
 const CONTINUE_STARTED_GAME = true;
@@ -49,9 +48,10 @@ export default class GameScreen {
     const modalView = new ModalView();
     modalView.onOk = () => {
       clearTimeout(this._timerID);
+      modalView.clear();
       Application.showGreeting();
     };
-    modalView.onCancel = () => removeLastNode();
+    modalView.onCancel = () => modalView.clear();
     changeWindow([modalView.element], true);
   }
 
@@ -62,7 +62,7 @@ export default class GameScreen {
     ];
   }
 
-  _isAllInputsSelected(inputNodes) {
+  _isEveryInputSelected(inputNodes) {
     return getCountInputsChecked(inputNodes) >= this._gameModel.currentAnswersImageCount;
   }
 
@@ -96,7 +96,7 @@ export default class GameScreen {
   _verifyUserAnswerClick(evt) {
     const inputNodes = [...document.querySelectorAll(INPUTS_SELECTOR)];
     if (
-      (inputNodes.length && this._isAllInputsSelected(inputNodes)) ||
+      (inputNodes.length && this._isEveryInputSelected(inputNodes)) ||
       !inputNodes.length) {
       this._processAnswer(evt);
     }

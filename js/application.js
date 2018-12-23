@@ -10,9 +10,10 @@ import Adapter from './data/adapter.js';
 import GameData from './data/game-data';
 import ErrorView from './utils/error-view.js';
 
-import {changeWindow} from './utils.js';
+import {changeWindow, changeWindowDelayDeletionPrevious} from './utils.js';
 
 const RELOADING_TRY_INTERVAL = 1000;
+const DELAY_CLOSING_PREVIOUS_SCREEN = 3000;
 
 const gameData = new GameData();
 const errorView = new ErrorView();
@@ -37,7 +38,7 @@ export default class Application {
   }
 
   static loadImages() {
-    Loader.fetchImages(gameData.urls).
+    Loader.fetchImages(gameData.urls, errorView.start).
       then((result) => {
         gameData.images = result;
         Application.showGreeting();
@@ -50,7 +51,7 @@ export default class Application {
 
   static showGreeting() {
     const screen = new GreetingScreen();
-    changeWindow([screen.element]);
+    changeWindowDelayDeletionPrevious([screen.element], DELAY_CLOSING_PREVIOUS_SCREEN);
   }
 
   static showRules() {
@@ -69,15 +70,15 @@ export default class Application {
   static showStats(model) {
     const screen = new StatsScreen(gameData.model);
     changeWindow([screen.element]);
-    Loader.downloadStatistics(gameData.model.username).
+    Loader.fetchStatistics(gameData.model.username).
       then((statistics) => {
         const models = Adapter.getModelsFromStatistics(statistics);
         screen.addEarlierStatistics(models);
         changeWindow([screen.element]);
       }).
-      catch(() => {}).
+      catch(() => errorView.start(`Cannot download statistics for user: ${gameData.model.username}`), 300).
       then(() => Loader.uploadStatistic(model)).
-      catch(() => {});
+      catch(() => errorView.start(`Error uploading statistics for user: ${gameData.model.username}`, 300));
   }
 
 }
