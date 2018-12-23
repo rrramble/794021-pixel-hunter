@@ -62,7 +62,7 @@ export default class GameScreen {
     ];
   }
 
-  _isAllInputsSelected(inputNodes) {
+  _isEveryInputSelected(inputNodes) {
     return getCountInputsChecked(inputNodes) >= this._gameModel.currentAnswersImageCount;
   }
 
@@ -96,7 +96,7 @@ export default class GameScreen {
   _verifyUserAnswerClick(evt) {
     const inputNodes = [...document.querySelectorAll(INPUTS_SELECTOR)];
     if (
-      (inputNodes.length && this._isAllInputsSelected(inputNodes)) ||
+      (inputNodes.length && this._isEveryInputSelected(inputNodes)) ||
       !inputNodes.length) {
       this._processAnswer(evt);
     }
